@@ -5,7 +5,7 @@
 
 ![RoguelikeDev Does the Complete Roguelike Tutorial Event Logo](https://i.imgur.com/GEyBFMC.png)
 
-At [r/roguelikedev](https://www.reddit.com/r/roguelikedev/) we're doing a dev-along following [The Complete Roguelike Tutorial](http://rogueliketutorials.com/libtcod/v2).
+At [r/roguelikedev](https://www.reddit.com/r/roguelikedev/) we're doing a dev-along following [The Complete Roguelike Tutorial](https://rogueliketutorials.com/tutorials/tcod/v2/).
 This implementation will be using the ![DragonRuby Game Tool Kit](https://dragonruby.org/), and hopefully help us learn something new.
 ## Roguelike 2024
 By: _Kehvarl <Kehvarl@Kehvarl.com>_
