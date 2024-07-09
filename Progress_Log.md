@@ -13,3 +13,10 @@
 * Install the editor of your choice
   * In this instance I am using Pulsar Edit (a fork of Atom)
 * Open `mygame` folder as a project in your editor
+
+
+## Part 1 - Drawing the '@' Symbol and Moving it around
+### Opening an Empty Window
+### Drawing to the screen
+#### Sprite hashes
+### Moving a Sprite
