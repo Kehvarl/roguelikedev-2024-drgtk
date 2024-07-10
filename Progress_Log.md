@@ -57,7 +57,7 @@ The line `def tick args` creates a function named `tick` that expects a single p
 The only line in our `tick` function references the `args` parameter.  If `tick` is how DragonRuby runs your code, `args` is how your code interacts with DragonRuby.  It lets you save and recover game-state information, it provides you with information about what inputs are being provided by your player, it includes some tools for layout, and interaction of on-screen objects, and it lets you output information to the screen.
 The line `args.outputs.primitives << ...` uses the `<<` command to append a definition to the `outputs.primitives` collection for DragonRuby to draw on screen this tick.
 
-#### hashes
+#### Hashes
 The definition in question: ` {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!` is a hash (the ruby word for a dictionary or map) with a few parameters:
 * x: the x position defining the left side of our rectangle (Nearly everything in DragonRuby is rects at this level)
 * y: the y position defining the *bottom* of our rectangle
@@ -69,4 +69,15 @@ The definition in question: ` {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!` i
 As you can see we are defining a solid black rectangle starting at the lower-left corner (0,0) that is the size of our window (1280x720), filling it completely.  This gives us a black background to draw the rest of our game on top of.
 
 #### Sprite hashes
+
+#### Working with Sprite Sheets
+
+#### Drawing our player on the screen
+
 ### Moving a Sprite
+
+#### Getting Keyboard Input
+
+#### Remembering State
+
+#### Freedom of Movement
