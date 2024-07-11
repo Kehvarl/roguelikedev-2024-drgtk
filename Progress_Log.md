@@ -69,6 +69,24 @@ The definition in question: ` {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!` i
 As you can see we are defining a solid black rectangle starting at the lower-left corner (0,0) that is the size of our window (1280x720), filling it completely.  This gives us a black background to draw the rest of our game on top of.
 
 #### Sprite hashes
+In additions to "solid" rectangles, DragonRuby can render an image known as a sprite.  For example, we can use the built-in blue square sprite found in the folder `mygame/sprites/square/`  it's named `blue.png`.
+
+A minimal sprite hash definition looks like
+```Ruby
+{x: x_value, y: y_value, w: draw_width, h: draw_height, path: sprite_path}.sprite!
+```
+As with the solid, it expects an x and y position for the lower left corner, then a width and height.  Instead of a color, it looks for a path to the image to use.  There are several other properties we can work with, but they all have sensible defaults.  For more details, refer to the [DragonRuby Documentation: API: Outputs: Sprites: Rendering a Sprite Using a Hash](http://docs.dragonruby.org.s3-website-us-east-1.amazonaws.com/#/api/outputs?id=rendering-a-sprite-using-a-hash)
+
+Update the `tick` method of your `main.rb` file to look like this:
+```Ruby
+def tick args
+  args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
+  args.outputs.primitives << {x:640, y:360, w:40, h:40, path:'sprites/square/blue.png'}.sprite!
+end
+```
+
+If you now run your game, you'll see a screen like this:
+![Part 1.1](./screenshots/Part1.1.png?raw=true "Game window with proper title")
 
 #### Working with Sprite Sheets
 
