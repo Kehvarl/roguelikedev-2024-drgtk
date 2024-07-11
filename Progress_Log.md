@@ -86,9 +86,35 @@ end
 ```
 
 If you now run your game, you'll see a screen like this:
-![Part 1.1](./screenshots/Part1.1.png?raw=true "Game window with proper title")
+![Part 1.1](./screenshots/Part1.1.png?raw=true "Game window showing a sprite")
 
 #### Working with Sprite Sheets
+Instead of drawing an entire image onto the screen, DragonRuby is capable of drawing just part of a larger image.  This allows you to store several sprites in a single image file, for example all the animation frames for a specific action, or all the different animation frames for a specific character.
+
+In this case we're going to use the included font-file `sprites/mist/simple-mood-16x16.png`.   This sprite sheet is a 16x16 grid of 16x16-pixel sprites that make up the simple-mood font.  Using this we can easily draw ASCII characters to the screen.
+![Part 1.2-font](./sprites/mist/simple-mood-16x16.png?raw=true "Simple Mood font")
+
+To draw a single item from a sprite sheet, we need to add 4 more properties to our hash:
+```Ruby
+{x: x_value, y: y_value, w: draw_width, h: draw_height,
+ source_x: sprite-sheet_x_position, source_y:sprite-sheet_y_position,
+ tile_w:width_of_sprite_in_sheet, tileh:height_of_sprite,
+ path: sprite_path}.sprite!
+```
+
+For example, if we adjust our `tick` method like so:
+```ruby
+def tick args
+  args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
+  args.outputs.primitives << {x:640, y:360, w:40, h:40,
+                              tile_x:0, tile_y:64,
+                              tile_w:16, tile_h:16,
+                              path:'sprites/misc/simple-mood-16x16.png'}.sprite!
+end
+```
+We've replaced our blue square with the "@" symbol from the sprite sheet.
+![Part 1.2](./screenshots/Part1.2.png?raw=true "Game window showing the @ symbol sprite")
+
 
 #### Drawing our player on the screen
 
