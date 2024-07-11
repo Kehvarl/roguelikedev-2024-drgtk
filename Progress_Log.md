@@ -57,7 +57,7 @@ The line `def tick args` creates a function named `tick` that expects a single p
 The only line in our `tick` function references the `args` parameter.  If `tick` is how DragonRuby runs your code, `args` is how your code interacts with DragonRuby.  It lets you save and recover game-state information, it provides you with information about what inputs are being provided by your player, it includes some tools for layout, and interaction of on-screen objects, and it lets you output information to the screen.
 The line `args.outputs.primitives << ...` uses the `<<` command to append a definition to the `outputs.primitives` collection for DragonRuby to draw on screen this tick.
 
-#### hashes
+#### Hashes
 The definition in question: ` {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!` is a hash (the ruby word for a dictionary or map) with a few parameters:
 * x: the x position defining the left side of our rectangle (Nearly everything in DragonRuby is rects at this level)
 * y: the y position defining the *bottom* of our rectangle
@@ -69,4 +69,59 @@ The definition in question: ` {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!` i
 As you can see we are defining a solid black rectangle starting at the lower-left corner (0,0) that is the size of our window (1280x720), filling it completely.  This gives us a black background to draw the rest of our game on top of.
 
 #### Sprite hashes
+In additions to "solid" rectangles, DragonRuby can render an image known as a sprite.  For example, we can use the built-in blue square sprite found in the folder `mygame/sprites/square/`  it's named `blue.png`.
+
+A minimal sprite hash definition looks like
+```Ruby
+{x: x_value, y: y_value, w: draw_width, h: draw_height, path: sprite_path}.sprite!
+```
+As with the solid, it expects an x and y position for the lower left corner, then a width and height.  Instead of a color, it looks for a path to the image to use.  There are several other properties we can work with, but they all have sensible defaults.  For more details, refer to the [DragonRuby Documentation: API: Outputs: Sprites: Rendering a Sprite Using a Hash](http://docs.dragonruby.org.s3-website-us-east-1.amazonaws.com/#/api/outputs?id=rendering-a-sprite-using-a-hash)
+
+Update the `tick` method of your `main.rb` file to look like this:
+```Ruby
+def tick args
+  args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
+  args.outputs.primitives << {x:640, y:360, w:40, h:40, path:'sprites/square/blue.png'}.sprite!
+end
+```
+
+If you now run your game, you'll see a screen like this:
+![Part 1.1](./screenshots/Part1.1.png?raw=true "Game window showing a sprite")
+
+#### Working with Sprite Sheets
+Instead of drawing an entire image onto the screen, DragonRuby is capable of drawing just part of a larger image.  This allows you to store several sprites in a single image file, for example all the animation frames for a specific action, or all the different animation frames for a specific character.
+
+In this case we're going to use the included font-file `sprites/mist/simple-mood-16x16.png`.   This sprite sheet is a 16x16 grid of 16x16-pixel sprites that make up the simple-mood font.  Using this we can easily draw ASCII characters to the screen.
+![Part 1.2-font](./sprites/mist/simple-mood-16x16.png?raw=true "Simple Mood font")
+
+To draw a single item from a sprite sheet, we need to add 4 more properties to our hash:
+```Ruby
+{x: x_value, y: y_value, w: draw_width, h: draw_height,
+ source_x: sprite-sheet_x_position, source_y:sprite-sheet_y_position,
+ tile_w:width_of_sprite_in_sheet, tileh:height_of_sprite,
+ path: sprite_path}.sprite!
+```
+
+For example, if we adjust our `tick` method like so:
+```ruby
+def tick args
+  args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
+  args.outputs.primitives << {x:640, y:360, w:40, h:40,
+                              tile_x:0, tile_y:64,
+                              tile_w:16, tile_h:16,
+                              path:'sprites/misc/simple-mood-16x16.png'}.sprite!
+end
+```
+We've replaced our blue square with the "@" symbol from the sprite sheet.
+![Part 1.2](./screenshots/Part1.2.png?raw=true "Game window showing the @ symbol sprite")
+
+
+#### Drawing our player on the screen
+
 ### Moving a Sprite
+
+#### Getting Keyboard Input
+
+#### Remembering State
+
+#### Freedom of Movement
