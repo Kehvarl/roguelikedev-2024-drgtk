@@ -115,8 +115,24 @@ end
 We've replaced our blue square with the "@" symbol from the sprite sheet.
 ![Part 1.2](./screenshots/Part1.2.png?raw=true "Game window showing the @ symbol sprite")
 
-
 #### Drawing our player on the screen
+To turn the new "@" sprite into our player representation, we need some way to make it respond to our inputs.  Which means we need some way to track the sprite's state, specifically its position on the screen.
+
+In `args` there's a collection named `state`.  Any value stored into this collection will be available to be accessed on any future tick.  We will use this to store our entire player hash like so:
+```ruby
+def tick args
+  args.state.player ||= {x:640, y:360, w:16, h:16,
+                              tile_x:0, tile_y:64,
+                              tile_w:16, tile_h:16,
+                              path:'sprites/misc/simple-mood-16x16.png'}.sprite!
+  args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
+  args.outputs.primitives << args.state.player
+end
+```
+
+Every time DragonRuby runs our `tick` function, it checks `args.state` for a variable named `player`.  If that variable is not set, then DragonRuby populates it with our player hash.   If it was already set in a prior tick, then this line does nothing.
+
+We also updated out output to draw the contents of our `player` variable onto the screen.  Meaning any update we make will be reflected in our output
 
 ### Moving a Sprite
 
