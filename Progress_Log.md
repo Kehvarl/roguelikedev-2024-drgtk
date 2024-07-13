@@ -115,13 +115,54 @@ end
 We've replaced our blue square with the "@" symbol from the sprite sheet.
 ![Part 1.2](./screenshots/Part1.2.png?raw=true "Game window showing the @ symbol sprite")
 
-
-#### Drawing our player on the screen
-
-### Moving a Sprite
-
-#### Getting Keyboard Input
-
 #### Remembering State
 
-#### Freedom of Movement
+To turn the new "@" sprite into our player representation, we need some way to make it respond to our inputs.  Which means we need some way to track the sprite's state, specifically its position on the screen.
+
+In `args` there's a collection named `state`.  Any value stored into this collection will be available to be accessed on any future tick.  We will use this to store our entire player hash like so:
+```ruby
+def tick args
+  args.state.player ||= {x:640, y:360, w:16, h:16,
+                              tile_x:0, tile_y:64,
+                              tile_w:16, tile_h:16,
+                              path:'sprites/misc/simple-mood-16x16.png'}.sprite!
+  args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
+  args.outputs.primitives << args.state.player
+end
+```
+
+Every time DragonRuby runs our `tick` function, it checks `args.state` for a variable named `player`.  If that variable is not set, then DragonRuby populates it with our player hash.   If it was already set in a prior tick, then this line does nothing.
+
+We also updated out output to draw the contents of our `player` variable onto the screen.  Meaning any update we make will be reflected in our output
+
+### Moving a Sprite
+Now that we have our player sprite stored in our game state, we can change it and render our changes each tick
+
+#### Getting Keyboard Input
+To get inputs we will use `args` again.  In this case `args.inputs` holds any supported input states, whether from controllers, a mouse, a touchscreen, or a keyboard.
+
+To check for a pressed key we can look at `args.inputs.keyboard.<key>`, but this will return true whether the key was just pressed, or if it's currently held down.  At 60 ticks per second, that might cause the player to take several turns when they only intend to take one.  Instead we'll use `args.inputs.keyboard.key_down.<key>` to only move when the key is pressed, then stop and wait for a new keypress.
+
+If we add keypress checking to the `tick` method, the result might look like this:
+```ruby
+def tick args
+  args.state.player ||= {x:640, y:360, w:16, h:16,
+                              tile_x:0, tile_y:64,
+                              tile_w:16, tile_h:16,
+                              path:'sprites/misc/simple-mood-16x16.png'}.sprite!
+  args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
+  args.outputs.primitives << args.state.player
+
+  if args.inputs.keyboard.key_down.up
+    args.state.player.y += 16
+  elsif args.inputs.keyboard.key_down.down
+    args.state.player.y -= 16
+  elsif args.inputs.keyboard.key_down.left
+    args.state.player.x -= 16
+  elsif args.inputs.keyboard.key_down.right
+    args.state.player.x += 16
+  end
+end
+```
+If you now run the game, you can move the player around the screen with the arrow keys
+![Part 1.3](./screenshots/Part1.3.png?raw=true "Player sprite can now move around the screen in response to inputs")
