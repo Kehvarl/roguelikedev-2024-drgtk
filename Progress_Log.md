@@ -166,3 +166,40 @@ end
 ```
 If you now run the game, you can move the player around the screen with the arrow keys
 ![Part 1.3](./screenshots/Part1.3.png?raw=true "Player sprite can now move around the screen in response to inputs")
+
+## Part 2 - The generic Entity, the render functions, and the map
+We now have an @ symbol we can move around, but there's nothing for it to move around with.
+
+### The Generic Entity
+Our @ symbol currently exists as a hash in our game state.  We could continue with this approach and just add a variety of properties to the hash to account for things like hit-points, experience, level, and any other attributes we need to track, there is another approach: using a class.
+
+#### The Sprite Class
+We could create a class and give it some way to output the sprite we need to draw.  That might looks like this:
+```ruby
+class Entity
+  def initialize(x,y,w,h,tile_x,tile_y)
+    @x = x
+    @y = y
+    @w = w
+    @h = h
+    @tile_x = tile_x
+    @tile_y = tile_y
+  end
+
+  def render
+    {x:@x, y:@y, w:16, h:16,
+     tile_x:@tile_x, tile_y:@tile_y,
+     tile_w:16, tile_h:16,
+     path:'sprites/misc/simple-mood-16x16.png'}.sprite!
+  end
+end
+```
+We could then build on this class as usual and after we perform our game logic on each tick we could then do something like this to render all our entities:
+```ruby
+Entities.each {|e|  args.outputs.primitives << e.render()}
+```
+
+However, there's a better way.  DragonRuby can also render sprites using a class, as shown in the [Documentation][(http://docs.dragonruby.org.s3-website-us-east-1.amazonaws.com/#/api/outputs?id=rendering-a-sprite-using-a-class). If we construct our class correctly, we can let DragonRuby render all of our entities with something as simple as:
+```ruby
+args.outputs.primitives << Entities
+```
