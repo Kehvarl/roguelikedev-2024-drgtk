@@ -203,3 +203,45 @@ However, there's a better way.  DragonRuby can also render sprites using a class
 ```ruby
 args.outputs.primitives << Entities
 ```
+#### Our Entity class
+We can convert our hash to a class like this:
+```ruby
+class Entity
+  attr_sprite
+
+  def initialize (x,y,char=[0,64],r=255,g=255,b=255)
+    @x = x
+    @y = y
+    @w = 16
+    @h = 16
+    @tile_w = 16
+    @tile_h = 16
+    @tile_x = char[0]
+    @tile_y = char[1]
+    @path ='sprites/misc/simple-mood-16x16.png'
+    @r = r
+    @g = g
+    @b = b
+  end
+end
+```
+
+The DragonRuby macro `attr_sprite` sets the attr_accessors for all the built-in values a sprite should have, and also includes an appropriate `primitive_marker` definition so DragonRuby knows how to render the object.
+
+We then define an `initialize` function which will be run when we call `Entity.new`.  This function requires the x and y positions where the character will be drawn.   A character can be provided based on the tile_x and tile_y offsets in our spritesheet.   We're also allowing r, g, and b values which DragonRuby will use to tint the sprite and adjust the color later on.
+
+There are a few other member variables we're defining in `initialize`, specifically w, and h: the width and height to use when drawing our sprite; also tile_w and tile_h: the width and height of characters in our spritesheet.
+
+Let's create a new class `entity.rb` and populate it with our class, then modify our main.rb to use that class.  We'll set a color for our sprite so we can tell it's different from before:
+```ruby
+require('app/entity.rb')
+
+def tick args
+  args.state.player ||= Entity.new(x=640,y=360,char=[0,64],r=255,g=255,b=0)
+  args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
+  args.outputs.primitives << args.state.player
+# ...
+```
+
+Run the new code and you now have a yellow @ you can move background
+![Part 2.0](./screenshots/Part2.0.png?raw=true "Drawing a Sprite using our new Entity class")
