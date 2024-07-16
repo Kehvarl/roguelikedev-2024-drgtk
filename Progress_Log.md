@@ -223,6 +223,7 @@ class Entity
     @g = g
     @b = b
   end
+
 end
 ```
 
@@ -245,3 +246,54 @@ def tick args
 
 Run the new code and you now have a yellow @ you can move background
 ![Part 2.0](./screenshots/Part2.0.png?raw=true "Drawing a Sprite using our new Entity class")
+
+#### The Uses of the Entity Class
+Right now our entity class is basically just a way to draw a sprite.  However, we can have the class take responsibility for movement as well by adding this method to our class:
+```ruby
+class Entity
+  # ...
+  def move(dx, dy)
+    @x += dx
+    @y += dy
+  end
+```
+
+We can then tweak the input handler code in our `main.py` to use this new method
+```ruby
+#...
+if args.inputs.keyboard.key_down.up
+  args.state.player.move(0,16)
+elsif args.inputs.keyboard.key_down.down
+  args.state.player.move(0,-16)
+elsif args.inputs.keyboard.key_down.left
+  args.state.player.move(-16, 0)
+elsif args.inputs.keyboard.key_down.right
+  args.state.player.move(16, 0)
+end
+```
+
+One more bit of cleanup.  We're moving by 16 with each move; this is because that's the size of the tiles we're drawing.   But we could just as easily move by 1 tile, and have the sprite know that 1 tile is 16 pixels
+
+```ruby
+#...
+if args.inputs.keyboard.key_down.up
+  args.state.player.move(0,1)
+elsif args.inputs.keyboard.key_down.down
+  args.state.player.move(0,-1)
+elsif args.inputs.keyboard.key_down.left
+  args.state.player.move(-1, 0)
+elsif args.inputs.keyboard.key_down.right
+  args.state.player.move(1, 0)
+end
+```
+
+and
+
+```ruby
+class Entity
+  # ...
+  def move(dx, dy)
+    @x += (dx * 16)
+    @y += (dy * 16)
+  end
+```

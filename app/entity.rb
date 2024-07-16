@@ -16,4 +16,9 @@ class Entity
     @g = g
     @b = b
   end
+
+  def move (dx, dy)
+    @x += (dx * 16)
+    @y += (dy * 16)
+  end
 end

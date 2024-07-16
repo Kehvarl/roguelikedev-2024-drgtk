@@ -6,12 +6,12 @@ def tick args
   args.outputs.primitives << args.state.player
 
   if args.inputs.keyboard.key_down.up
-    args.state.player.y += 16
+    args.state.player.move(0,1)
   elsif args.inputs.keyboard.key_down.down
-    args.state.player.y -= 16
+    args.state.player.move(0,-1)
   elsif args.inputs.keyboard.key_down.left
-    args.state.player.x -= 16
+    args.state.player.move(-1, 0)
   elsif args.inputs.keyboard.key_down.right
-    args.state.player.x += 16
+    args.state.player.move(1, 0)
   end
 end
