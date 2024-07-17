@@ -291,9 +291,28 @@ and
 
 ```ruby
 class Entity
+  def initialize (x,y,char=[0,64],r=255,g=255,b=255)
+    puts char
+    @x = x * 16
+    @y = y * 16
   # ...
   def move(dx, dy)
     @x += (dx * 16)
     @y += (dy * 16)
   end
 ```
+
+Let's use that Entity class to spawn an NPC too.  In our `main.rb` update our initialization code:
+
+```Ruby
+def tick args
+  args.state.player ||= Entity.new(x=40,y=20,char=[0,64],r=255,g=255,b=255)
+  args.state.entities ||= [args.state.player, Entity.new(x=42,y=20,char=[0,64],r=255,g=255,b=0)]
+  args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
+  args.outputs.primitives << args.state.entities
+  #...
+```
+
+We've created a new array of antities and put our player entity into it.  We've kept a reference to Player so we can sent it `move` commands,  and we've added another entity that doesn't respond to keyboard inputs.  By rendering our entire `entities` array, all entity sprites get sent to the screen in one step.
+
+![Part 2.1](./screenshots/Part2.1.png?raw=true "Drawing multiple Entities")

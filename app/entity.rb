@@ -3,8 +3,8 @@ class Entity
 
   def initialize (x,y,char=[0,64],r=255,g=255,b=255)
     puts char
-    @x = x
-    @y = y
+    @x = x * 16
+    @y = y * 16
     @w = 16
     @h = 16
     @tile_w = 16
