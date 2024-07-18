@@ -1,18 +1,23 @@
 require('app/entity.rb')
+require('app/engine.rb')
 
 def tick args
-  args.state.player ||= Entity.new(x=40,y=20,char=[0,64],r=255,g=255,b=255)
-  args.state.entities ||= [args.state.player, Entity.new(x=42,y=20,char=[0,64],r=255,g=255,b=0)]
-  args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
-  args.outputs.primitives << args.state.entities
+  if args.tick_count == 0
+    player = Entity.new(x=40,y=20,char=[0,64],r=255,g=255,b=255)
+    entities = [player, Entity.new(x=42,y=20,char=[0,64],r=255,g=255,b=0)]
+    args.state.engine = Engine.new(entities, player)
+  end
 
   if args.inputs.keyboard.key_down.up
-    args.state.player.move(0,1)
+    args.state.engine.handle_events([{type: :player_move, dx:0, dy:1}])
   elsif args.inputs.keyboard.key_down.down
-    args.state.player.move(0,-1)
+    args.state.engine.handle_events([{type: :player_move, dx:0, dy:-1}])
   elsif args.inputs.keyboard.key_down.left
-    args.state.player.move(-1, 0)
+    args.state.engine.handle_events([{type: :player_move, dx:-1, dy:0}])
   elsif args.inputs.keyboard.key_down.right
-    args.state.player.move(1, 0)
+    args.state.engine.handle_events([{type: :player_move, dx:1, dy:0}])
   end
+
+  args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
+  args.outputs.primitives << args.state.engine.render()
 end
