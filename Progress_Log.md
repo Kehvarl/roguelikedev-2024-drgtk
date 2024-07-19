@@ -316,3 +316,93 @@ def tick args
 We've created a new array of antities and put our player entity into it.  We've kept a reference to Player so we can sent it `move` commands,  and we've added another entity that doesn't respond to keyboard inputs.  By rendering our entire `entities` array, all entity sprites get sent to the screen in one step.
 
 ![Part 2.1](./screenshots/Part2.1.png?raw=true "Drawing multiple Entities")
+
+### The Game Engine
+The Python+TCOD tutorial uses a class named Engine to hold the entities, process input events, handle game logic, and manage rendering.
+
+DragonRuby itself can act as our game engine with `args` acting as our tool for receiving input, tracking state, and outputting to the screen.  However, sometimes it's helpful to encapsulate game logic into a class designed to manage it.  Such a class might look like the following.
+
+First, create the file `engine.rb` then populate it like so
+```ruby
+class Engine
+  def initialize(entities, player)
+    @entities = entities
+    @player = player
+  end
+
+  def handle_events(events)
+      events.each do |event|
+        if event.type == :player_move
+          @player.move(event.dx, event.dy)
+        end
+      end
+  end
+
+  def render
+    @entities
+  end
+end
+```
+
+This skeleton does a few things
+```Ruby
+def initialize(entities, player)
+  @entities = entities
+  @player = player
+end
+```
+We create class members that store the entity array and reference to the player entity.  We can use these for rendering later, and also to interact with our player entity.  
+
+```ruby
+def handle_events(events)
+    events.each do |event|
+      if event.type == :player_move
+        @player.move(event.dx, event.dy)
+      end
+    end
+end
+```
+The start of an event handler.  Rather than each event being fed to the various entities immediately, we can batch them together, and process them in groups.  This currently only makes use of the Player entity's move function.
+
+```Ruby
+  def render
+    @entities
+  end
+```
+The render function just returns the list of entities to be drawn, but as our game becomes more detailed, we can upgrade that to draw rooms or even special effects
+
+Of course, the Engine doesn't do anything unless we use it, so let's modify `main.rb` again and use this new tool in our arsenal:
+
+```ruby
+require('app/entity.rb')
+require('app/engine.rb')
+
+def tick args
+  if args.tick_count == 0
+    player = Entity.new(x=40,y=20,char=[0,64],r=255,g=255,b=255)
+    entities = [player, Entity.new(x=42,y=20,char=[0,64],r=255,g=255,b=0)]
+    args.state.engine = Engine.new(entities, player)
+  end
+
+  if args.inputs.keyboard.key_down.up
+    args.state.engine.handle_events([{type: :player_move, dx:0, dy:1}])
+  elsif args.inputs.keyboard.key_down.down
+    args.state.engine.handle_events([{type: :player_move, dx:0, dy:-1}])
+  elsif args.inputs.keyboard.key_down.left
+    args.state.engine.handle_events([{type: :player_move, dx:-1, dy:0}])
+  elsif args.inputs.keyboard.key_down.right
+    args.state.engine.handle_events([{type: :player_move, dx:1, dy:0}])
+  end
+
+  args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
+  args.outputs.primitives << args.state.engine.render()
+end
+```
+
+We start by using `require` to make our Engine class available to us.
+
+Next, we've changed out initialization a bit.  Instead of using `||=` to see if we need to set state every turn, we just check for the current Tick count.  On the first Tick (0), we create a player, create an entities array with the player and an NPC, then create an instance of Engine with that player and entities list.   You'll notice the only item we add to our `args.state` is the new Egnine.  We don't need to keep the player and entities references since Engine tracks that for us.
+
+We've tweaked the inputs to pass each potential action to the Engine.  This isn't the best way to do this and we'll improve on that in the next step.
+
+Finally, we've moved our rendering code to the end of the Tick.  And we simply draw the output of `Engine.render()` to the screen
