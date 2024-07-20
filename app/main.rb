@@ -8,15 +8,19 @@ def tick args
     args.state.engine = Engine.new(entities, player)
   end
 
+  events = []
+
   if args.inputs.keyboard.key_down.up
-    args.state.engine.handle_events([{type: :player_move, dx:0, dy:1}])
+    events << {type: :player_move, dx:0, dy:1}
   elsif args.inputs.keyboard.key_down.down
-    args.state.engine.handle_events([{type: :player_move, dx:0, dy:-1}])
+    events << {type: :player_move, dx:0, dy:-1}
   elsif args.inputs.keyboard.key_down.left
-    args.state.engine.handle_events([{type: :player_move, dx:-1, dy:0}])
+    events << {type: :player_move, dx:-1, dy:0}
   elsif args.inputs.keyboard.key_down.right
-    args.state.engine.handle_events([{type: :player_move, dx:1, dy:0}])
+    events << {type: :player_move, dx:1, dy:0}
   end
+
+  args.state.engine.handle_events(events)
 
   args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
   args.outputs.primitives << args.state.engine.render()

@@ -322,6 +322,7 @@ The Python+TCOD tutorial uses a class named Engine to hold the entities, process
 
 DragonRuby itself can act as our game engine with `args` acting as our tool for receiving input, tracking state, and outputting to the screen.  However, sometimes it's helpful to encapsulate game logic into a class designed to manage it.  Such a class might look like the following.
 
+#### The Engine Class
 First, create the file `engine.rb` then populate it like so
 ```ruby
 class Engine
@@ -406,3 +407,7 @@ Next, we've changed out initialization a bit.  Instead of using `||=` to see if 
 We've tweaked the inputs to pass each potential action to the Engine.  This isn't the best way to do this and we'll improve on that in the next step.
 
 Finally, we've moved our rendering code to the end of the Tick.  And we simply draw the output of `Engine.render()` to the screen
+
+If you run the program now, it's in a working state but our new Engine is handling most of the processing for us.
+
+#### Multiple Events
