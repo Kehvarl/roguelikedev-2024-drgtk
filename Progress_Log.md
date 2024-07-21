@@ -432,3 +432,40 @@ args.state.engine.handle_events(events)
 ```
 
 Essentially, we create an events list, and simply append all our events to it.  In this case the list is only ever one item long, but future edits can change that.
+
+### The Game Map
+With our Engine class handling most of the heavy lifting so far, and both our player and NPC on the screen, it's time to give the player something to explore.   We won't go into procedural generation yet, but we'll build a class to hold and display a map on the screen, and allow us to move around its corridors and rooms.
+
+#### The Tile class
+The map is made up of a series of `Tile` objects.  Since a `Tile` is something we'll draw on the screen, it's another Sprite, like the `Entity` class.  Unlike `Entity`, a `Tile` doesn't move around the map, and doesn't interact with the player or other entities in the same way.  Instead, a Tile will hold parameters about its appearance, and how it allows or prevents visibility and movement through the space it represents.
+
+Create a new file named `tiles.rb` and populate it like so:
+```ruby
+class Tile
+  attr_sprite
+  
+  def initialize(x, y, char=[176, 208], r=50, b=50, g=100)
+    @x = x * 16
+    @y = y * 16
+    @w = 16
+    @h = 16
+    @tile_w = 16
+    @tile_h = 16
+    @tile_x = char[0]
+    @tile_y = char[1]
+    @path ='sprites/misc/simple-mood-16x16.png'
+    @r = r
+    @g = g
+    @b = b
+  end
+end
+```
+
+#### The GameMap class
+We'll start a new file: `game_map.rb` with the following contents:
+```ruby
+class GameMap
+  def initialize()
+  end
+end
+```

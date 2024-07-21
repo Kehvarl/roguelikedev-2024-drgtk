@@ -2,7 +2,6 @@ class Entity
   attr_sprite
 
   def initialize (x,y,char=[0,64],r=255,g=255,b=255)
-    puts char
     @x = x * 16
     @y = y * 16
     @w = 16
