@@ -443,7 +443,7 @@ Create a new file named `tiles.rb` and populate it like so:
 ```ruby
 class Tile
   attr_sprite
-  
+
   def initialize(x, y, char=[176, 208], r=50, b=50, g=100)
     @x = x * 16
     @y = y * 16
@@ -457,6 +457,8 @@ class Tile
     @r = r
     @g = g
     @b = b
+    @blocks_movement
+    @blocks_vision
   end
 end
 ```
@@ -466,6 +468,18 @@ We'll start a new file: `game_map.rb` with the following contents:
 ```ruby
 class GameMap
   def initialize()
+    @w = 80
+    @h = 40
+    @tiles = []
+  end
+
+  def in_bounds(x,y)
+    (0 <= x <= @w) and (0 <= y < @h)
+  end
+
+  def render()
+    @tiles
   end
 end
+
 ```

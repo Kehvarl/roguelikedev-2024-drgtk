@@ -1,11 +1,14 @@
 require('app/entity.rb')
 require('app/engine.rb')
+require('app/tile.rb')
+require('app/game_map.rb')
 
 def tick args
   if args.tick_count == 0
     player = Entity.new(x=40,y=20,char=[0,64],r=255,g=255,b=255)
     entities = [player, Entity.new(x=42,y=20,char=[0,64],r=255,g=255,b=0)]
     args.state.engine = Engine.new(entities, player)
+    args.state.game_map = GameMap.new()
   end
 
   events = []
@@ -23,5 +26,6 @@ def tick args
   args.state.engine.handle_events(events)
 
   args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
+  args.outputs.primitives << args.state.game_map.render()
   args.outputs.primitives << args.state.engine.render()
 end
