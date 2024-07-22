@@ -322,6 +322,7 @@ The Python+TCOD tutorial uses a class named Engine to hold the entities, process
 
 DragonRuby itself can act as our game engine with `args` acting as our tool for receiving input, tracking state, and outputting to the screen.  However, sometimes it's helpful to encapsulate game logic into a class designed to manage it.  Such a class might look like the following.
 
+#### The Engine Class
 First, create the file `engine.rb` then populate it like so
 ```ruby
 class Engine
@@ -406,3 +407,28 @@ Next, we've changed out initialization a bit.  Instead of using `||=` to see if 
 We've tweaked the inputs to pass each potential action to the Engine.  This isn't the best way to do this and we'll improve on that in the next step.
 
 Finally, we've moved our rendering code to the end of the Tick.  And we simply draw the output of `Engine.render()` to the screen
+
+If you run the program now, it's in a working state but our new Engine is handling most of the processing for us.
+
+#### Multiple Events
+Instead of calling the event handler for each event, we can collect the events that do occur and pass them to our engine class.  An example of that would be changing our `main.py` like so
+
+```ruby
+#...
+events = []
+
+if args.inputs.keyboard.key_down.up
+  events << {type: :player_move, dx:0, dy:1}
+elsif args.inputs.keyboard.key_down.down
+  events << {type: :player_move, dx:0, dy:-1}
+elsif args.inputs.keyboard.key_down.left
+  events << {type: :player_move, dx:-1, dy:0}
+elsif args.inputs.keyboard.key_down.right
+  events << {type: :player_move, dx:1, dy:0}
+end
+
+args.state.engine.handle_events(events)
+#...
+```
+
+Essentially, we create an events list, and simply append all our events to it.  In this case the list is only ever one item long, but future edits can change that.
