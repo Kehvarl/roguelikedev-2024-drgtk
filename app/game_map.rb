@@ -5,10 +5,10 @@ class GameMap
     @w = 80
     @h = 40
     @tiles = {}
-    @tiles[30,22] << Tile.new(x=30,y=22)
-    @tiles[31,22] << Tile.new(x=31,y=22)
-    @tiles[32,22] << Tile.new(x=31,y=22)
-    @tiles[33,22] << Tile.new(x=33,y=22)
+    @tiles[[30,22]] = Tile.new(x=30,y=22)
+    @tiles[[31,22]] = Tile.new(x=31,y=22)
+    @tiles[[32,22]] = Tile.new(x=32,y=22)
+    @tiles[[33,22]] = Tile.new(x=33,y=22)
   end
 
   def in_bounds(x,y)
@@ -16,6 +16,10 @@ class GameMap
   end
 
   def render()
-    @tiles
+    out = []
+    @tiles.each_key do |t|
+      out << @tiles[t]
+    end
+    out
   end
 end

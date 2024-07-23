@@ -1,7 +1,7 @@
 class Tile
   attr_sprite
 
-  def initialize(x, y, char=[176, 208], r=50, b=50, g=100)
+  def initialize (x,y,char=[176, 208], r=50, b=50, g=100)
     @x = x * 16
     @y = y * 16
     @w = 16
