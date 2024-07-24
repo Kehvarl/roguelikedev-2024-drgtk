@@ -481,5 +481,6 @@ class GameMap
     @tiles
   end
 end
-
 ```
+
+### Part 3 - Generating the Dungeon
