@@ -484,3 +484,7 @@ end
 ```
 
 ### Part 3 - Generating the Dungeon
+ Instead of placing lots of walls in our dungeon, we can treat treat the majority of the dungeon as wall, and "carve" out the rooms and hallways between them.
+
+#### Procedural Generation
+We can embed our map-generating code into GameMap by creating a helper class and adding some features to GameMap itself.
