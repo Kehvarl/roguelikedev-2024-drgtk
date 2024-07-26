@@ -487,4 +487,21 @@ end
  Instead of placing lots of walls in our dungeon, we can treat treat the majority of the dungeon as wall, and "carve" out the rooms and hallways between them.
 
 #### Procedural Generation
-We can embed our map-generating code into GameMap by creating a helper class and adding some features to GameMap itself.
+We could make map generation part of GameMap, but that just adds extra code to that class which is only used once in its lifetime.  Instead we will build a class for generating GameMaps with the map already populated.  Begin by creating a new file: `prog_gen.rb`
+
+##### What's in a room
+Our dungeon generation algorithm will use rooms and connecting corridors.  To begin with, we'll create a class to identify a room for us:
+
+```Ruby
+class RectRoom
+  attr_accessors :x1, :y1, :x2, :y2, :center_x, :center_y
+  def initialize (x, y, w, h)
+    @x1 = x
+    @y1 = y
+    @x2 = x + w
+    @y2 = y + h
+    @center_x = @x1 + w.div(2)
+    @center_y = @y1 + h.div(2)
+  end
+end
+```
