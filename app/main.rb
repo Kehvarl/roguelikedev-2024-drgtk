@@ -2,13 +2,15 @@ require('app/entity.rb')
 require('app/engine.rb')
 require('app/tile.rb')
 require('app/game_map.rb')
+require('app/proc_gen.rb')
 
 def tick args
   if args.tick_count == 0
     player = Entity.new(x=40,y=20,char=[0,64],r=255,g=255,b=255)
     entities = [player, Entity.new(x=42,y=20,char=[0,64],r=255,g=255,b=0)]
     args.state.engine = Engine.new(entities, player)
-    args.state.game_map = GameMap.new()
+    generator = DungeonMaker.new()
+    args.state.game_map = generator.generate_dungeon()
   end
 
   events = []
