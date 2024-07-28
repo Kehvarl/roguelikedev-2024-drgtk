@@ -474,7 +474,43 @@ class GameMap
   end
 
   def in_bounds(x,y)
-    (0 <= x <= @w) and (0 <= y < @h)
+    require('app/game_map.rb')
+
+    class RectRoom
+      attr_accessor :x1, :y1, :x2, :y2, :center_x, :center_y
+      def initialize (x, y, w, h)
+        @x1 = x
+        @y1 = y
+        @x2 = x + w
+        @y2 = y + h
+        @center_x = @x1 + w.div(2)
+        @center_y = @y1 + h.div(2)
+      end
+    end
+
+    class DungeonMaker
+      def initialize()
+        @dungeon = GameMap.new()
+      end
+
+      def generate_dungeon()
+        room_1 = RectRoom.new(x=20, y=15, w=10, h=15)
+        room_2 = RectRoom.new(x=35, y=15, w=10, h=15)
+
+        carve(room_1)
+        carve(room_2)
+
+        return @dungeon
+      end
+
+      def carve(room)
+        (room.y1+1..room.y2).each do |y|
+          (room.x1+1..room.x2).each do |x|
+            @dungeon.tiles[[x,y]] = Tile.new(x=x, y=y)
+          end
+        end
+      end
+    end
   end
 
   def render()
@@ -493,9 +529,28 @@ We could make map generation part of GameMap, but that just adds extra code to t
 Our dungeon generation algorithm will use rooms and connecting corridors.  To begin with, we'll create a class to identify a room for us:
 
 ```Ruby
-require('app/game_map.rb')
 class RectRoom
-  attr_accessors :x1, :y1, :x2, :y2, :center_x, :center_y
+  attr_accessor :x1, :y1, :x2, :y2, :center_x, :center_y
+  def initialize (x, y, w, h)
+    @x1 = x
+    @y1 = y
+    @x2 = x + w
+    @y2 = y + h
+    @center_x = @x1 + w.div(2)
+    @center_y = @y1 + h.div(2)
+  end
+end
+```
+This simple class mostly stores a set of start and end coordinates, while also keeping track of the centerpoint that represents the middle of the room.  We'll use this for the actual generator.
+
+Next create a class `DungeonMaker` which will be used to carve the actual rooms out of our Dungeon.  Since DungeonMaker needs access to an instance of GameMap, we need to make sure to `require` that first.
+
+
+```ruby
+require('app/game_map.rb')
+
+class RectRoom
+  attr_accessor :x1, :y1, :x2, :y2, :center_x, :center_y
   def initialize (x, y, w, h)
     @x1 = x
     @y1 = y
@@ -508,12 +563,12 @@ end
 
 class DungeonMaker
   def initialize()
-    @dungeon = GameMap()
+    @dungeon = GameMap.new()
   end
 
   def generate_dungeon()
-    room_1 = RectRoom(x=20, y=15, w=10, h=15)
-    room_2 = RectRoom(x=35, y=15, w=10, h=15)
+    room_1 = RectRoom.new(x=20, y=15, w=10, h=15)
+    room_2 = RectRoom.new(x=35, y=15, w=10, h=15)
 
     carve(room_1)
     carve(room_2)
@@ -523,10 +578,41 @@ class DungeonMaker
 
   def carve(room)
     (room.y1+1..room.y2).each do |y|
-      (room.x+1..room.x2).each do |x|
-        @dungeon.tiles << Tile.new(x=x, y=y)
+      (room.x1+1..room.x2).each do |x|
+        @dungeon.tiles[[x,y]] = Tile.new(x=x, y=y)
       end
-    end 
+    end
   end
 end
+```
+
+`DungeonMaker` has 2 methods:  `generate _dungeon` which creates the room layout and returns the finished GameMap, and `carve` which takes a RectRoom object and carves it out of the map so the tiles are walkable.
+
+
+To use this new class, we need to make a couple of changes.  First, to `main.rb`, we're going to use DungeonMaker to generate the GameMap we'll be Using
+```ruby
+require('app/proc_gen.rb')
+
+def tick args
+  if args.tick_count == 0
+    player = Entity.new(x=40,y=20,char=[0,64],r=255,g=255,b=255)
+    entities = [player, Entity.new(x=42,y=20,char=[0,64],r=255,g=255,b=0)]
+    args.state.engine = Engine.new(entities, player)
+    generator = DungeonMaker.new()
+    args.state.game_map = generator.generate_dungeon()
+  end
+#...
+```
+
+And in `GameMap` itself, we want to take out our hard-coded tiles:
+
+```Ruby
+class GameMap
+  attr_accessor :tiles
+  def initialize()
+    @w = 80
+    @h = 40
+    @tiles = {}
+  end
+# ...
 ```
