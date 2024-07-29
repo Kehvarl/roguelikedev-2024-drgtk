@@ -23,6 +23,7 @@ class DungeonMaker
 
     carve(room_1)
     carve(room_2)
+    tunnel_between(room_1,room_2)
 
     return @dungeon
   end
@@ -32,6 +33,15 @@ class DungeonMaker
       (room.x1+1..room.x2).each do |x|
         @dungeon.tiles[[x,y]] = Tile.new(x=x, y=y)
       end
+    end
+  end
+
+  def tunnel_between(r1, r2)
+    (r1.center_x..r2.center_x).each do |x|
+      @dungeon.tiles[[x,r1.center_y]] = Tile.new(x=x, y=r1.center_y)
+    end
+    (r1.center_y..r2.center_y).each do |y|
+      @dungeon.tiles[[r2.center_x,y]] = Tile.new(x=r2.center_x, y=y)
     end
   end
 end
