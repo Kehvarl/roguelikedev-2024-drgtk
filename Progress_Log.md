@@ -616,3 +616,7 @@ class GameMap
   end
 # ...
 ```
+
+If we run our project we should see 2 rooms joined by a pathway
+
+![Part 3.2](./screenshots/Part3.2.png?raw=true "Connecting rooms with hallways")
