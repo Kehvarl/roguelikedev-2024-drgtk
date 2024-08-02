@@ -19,7 +19,7 @@ class DungeonMaker
 
   def generate_dungeon()
     room_1 = RectRoom.new(x=20, y=15, w=10, h=15)
-    room_2 = RectRoom.new(x=35, y=25, w=10, h=15)
+    room_2 = RectRoom.new(x=35, y=15, w=10, h=15)
 
     carve(room_1)
     carve(room_2)
