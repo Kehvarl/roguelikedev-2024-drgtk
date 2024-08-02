@@ -617,6 +617,56 @@ class GameMap
 # ...
 ```
 
+
+![Part 3.1](./screenshots/Part3.1.png?raw=true "Generating rooms")
+
+Of course, rooms aren't quite enough, we need a way to travel between them.  For this we will carve out hallways that connect the center points of 2 rooms we want to join.   Since these rooms are already carved out, that gives the effect of just joining the rooms.
+
+However, since our center-points are rarely going to line up exactly, we need to make corridors that can connect offset rooms.  This is easily done with just 2 lines:  A horzontal line from lowest X to highest, and a Vertical line from lowest Y to highest.   If we randomize the order we draw these two lines, we can make a variety of connections.
+
+Let's start by adding the method `tile_between` to our DungeonMaker class, like so:
+```ruby
+def tunnel_between(r2, r1)
+  x1 = [r1.center_x,r2.center_x].min
+  x2 = [r1.center_x,r2.center_x].max
+  y1 = [r1.center_y,r2.center_y].min
+  y2 = [r1.center_y,r2.center_y].max
+  if [0,1].sample() == 0 #H then V
+    (x1..x2).each do |x|
+      @dungeon.tiles[[x,y1]] = Tile.new(x=x, y=y1)
+    end
+    (y1..y2).each do |y|
+      @dungeon.tiles[[x2,y]] = Tile.new(x=x2, y=y)
+    end
+  else #V then H
+    (y1..y2).each do |y|
+      @dungeon.tiles[[x1,y]] = Tile.new(x=x1, y=y)
+    end
+    (x1..x2).each do |x|
+      @dungeon.tiles[[x,y2]] = Tile.new(x=x, y=y2)
+    end
+  end
+end
+```
+
+This method takes 2 rooms and finds the lowest X, highest X, lowest Y, and highest Y, then randomly decides which of the two directions to carve first.
+
+To demonstrate, let's modify our `generate_dungeon` method like so:
+
+```ruby
+
+  def generate_dungeon()
+    room_1 = RectRoom.new(x=20, y=15, w=10, h=15)
+    room_2 = RectRoom.new(x=35, y=15, w=10, h=15)
+
+    carve(room_1)
+    carve(room_2)
+    tunnel_between(room_1,room_2)
+
+    return @dungeon
+  end
+```
+
 If we run our project we should see 2 rooms joined by a pathway
 
 ![Part 3.2](./screenshots/Part3.2.png?raw=true "Connecting rooms with hallways")
