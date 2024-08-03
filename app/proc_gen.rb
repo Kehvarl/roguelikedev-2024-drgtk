@@ -1,8 +1,12 @@
 require('app/game_map.rb')
 
 class RectRoom
-  attr_accessor :x1, :y1, :x2, :y2, :center_x, :center_y
+  attr_accessor :x1, :y1, :x2, :y2, :center_x, :center_y, :x, :y, :w, :h
   def initialize (x, y, w, h)
+    @x = x
+    @y = y
+    @w = w
+    @h = h
     @x1 = x
     @y1 = y
     @x2 = x + w
@@ -10,21 +14,37 @@ class RectRoom
     @center_x = @x1 + w.div(2)
     @center_y = @y1 + h.div(2)
   end
+
+
 end
 
 class DungeonMaker
   def initialize()
     @dungeon = GameMap.new()
+    @max_rooms = 10
+    @room_min_size = 4
+    @room_max_size = 10
   end
 
-  def generate_dungeon()
-    room_1 = RectRoom.new(x=20, y=15, w=10, h=15)
-    room_2 = RectRoom.new(x=35, y=15, w=10, h=15)
+  def generate_dungeon(args)
+    rooms = []
+    (0...@max_rooms).each do
+      rw = (@room_min_size...@room_max_size).to_a.sample
+      rh = (@room_min_size...@room_max_size).to_a.sample
+      x = (0...(@dungeon.w - rw - 1)).to_a.sample
+      y = (0...(@dungeon.h - rh - 1)).to_a.sample
 
-    carve(room_1)
-    carve(room_2)
-    tunnel_between(room_1,room_2)
+      new_room = RectRoom.new(x, y, rw, rh)
 
+      collisions = args.geometry.find_all_intersect_rect(new_room, rooms)
+      if collisions.size == 0
+        rooms << new_room
+        carve(new_room)
+        if rooms.size > 1
+          tunnel_between(rooms[-2], rooms[-1])
+        end
+      end
+    end
     return @dungeon
   end
 

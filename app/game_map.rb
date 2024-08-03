@@ -1,7 +1,7 @@
 require('app/tile.rb')
 
 class GameMap
-  attr_accessor :tiles
+  attr_accessor :tiles, :w, :h
   def initialize()
     @w = 80
     @h = 40
