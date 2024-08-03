@@ -10,7 +10,7 @@ def tick args
     entities = [player, Entity.new(x=42,y=20,char=[0,64],r=255,g=255,b=0)]
     args.state.engine = Engine.new(entities, player)
     generator = DungeonMaker.new()
-    args.state.game_map = generator.generate_dungeon()
+    args.state.game_map = generator.generate_dungeon(args)
   end
 
   events = []
