@@ -1,4 +1,5 @@
 class Engine
+  attr_accessor :player
   def initialize(entities, player)
     @entities = entities
     @player = player

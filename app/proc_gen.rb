@@ -19,8 +19,9 @@ class RectRoom
 end
 
 class DungeonMaker
-  def initialize()
+  def initialize(engine)
     @dungeon = GameMap.new()
+    @engine = engine
     @max_rooms = 10
     @room_min_size = 4
     @room_max_size = 10
@@ -41,17 +42,20 @@ class DungeonMaker
         rooms << new_room
         carve(new_room)
         if rooms.size > 1
-          tunnel_between(rooms[-2], rooms[-1])
+          tunnel_between(rooms[-2], new_room)
         end
       end
     end
+    @engine.player.position(rooms[0].center_x, rooms[0].center_y)
     return @dungeon
   end
 
   def carve(room)
-    (room.y1+1..room.y2).each do |y|
-      (room.x1+1..room.x2).each do |x|
-        @dungeon.tiles[[x,y]] = Tile.new(x=x, y=y, char=[176, 208], r=100, g=100, b=100)
+    (room.y1+2..room.y2-1).each do |y|
+      (room.x1+2..room.x2-1).each do |x|
+        if not @dungeon.tiles.key?([x,y])
+          @dungeon.tiles[[x,y]] = Tile.new(x=x, y=y, char=[176, 208], r=100, g=100, b=100)
+        end
       end
     end
   end
@@ -61,7 +65,8 @@ class DungeonMaker
     x2 = [r1.center_x,r2.center_x].max
     y1 = [r1.center_y,r2.center_y].min
     y2 = [r1.center_y,r2.center_y].max
-    if [0,1].sample() == 0 #H then V
+    puts("#{x1}, #{x2} .. #{y1}, #{y2}")
+    if 1==1 #[0,1].sample() == 0 #H then V
       (x1..x2).each do |x|
         @dungeon.tiles[[x,y1]] = Tile.new(x=x, y=y1)
       end
