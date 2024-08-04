@@ -16,6 +16,11 @@ class Entity
     @b = b
   end
 
+  def position(x, y)
+    @x = x * 16
+    @y = y * 16
+  end
+
   def move (dx, dy)
     @x += (dx * 16)
     @y += (dy * 16)
