@@ -1,4 +1,14 @@
 require('app/game_map.rb')
+class Range
+   def each
+     if self.first < self.last
+       self.first.upto(last)  { |i| yield i}
+     else
+       self.first.downto(last) { |i|  yield i }
+     end
+   end
+end
+
 
 class RectRoom
   attr_accessor :x1, :y1, :x2, :y2, :center_x, :center_y, :x, :y, :w, :h
@@ -39,6 +49,7 @@ class DungeonMaker
 
       collisions = args.geometry.find_all_intersect_rect(new_room, rooms)
       if collisions.size == 0
+        puts("#{new_room.center_x}, #{new_room.center_y}")
         rooms << new_room
         carve(new_room)
         if rooms.size > 1
@@ -51,8 +62,8 @@ class DungeonMaker
   end
 
   def carve(room)
-    (room.y1+2..room.y2-1).each do |y|
-      (room.x1+2..room.x2-1).each do |x|
+    (room.y1+1..room.y2).each do |y|
+      (room.x1+1..room.x2).each do |x|
         if not @dungeon.tiles.key?([x,y])
           @dungeon.tiles[[x,y]] = Tile.new(x=x, y=y, char=[176, 208], r=100, g=100, b=100)
         end
@@ -61,24 +72,19 @@ class DungeonMaker
   end
 
   def tunnel_between(r2, r1)
-    x1 = [r1.center_x,r2.center_x].min
-    x2 = [r1.center_x,r2.center_x].max
-    y1 = [r1.center_y,r2.center_y].min
-    y2 = [r1.center_y,r2.center_y].max
-    puts("#{x1}, #{x2} .. #{y1}, #{y2}")
-    if 1==1 #[0,1].sample() == 0 #H then V
-      (x1..x2).each do |x|
-        @dungeon.tiles[[x,y1]] = Tile.new(x=x, y=y1)
+    if [0,1].sample() == 0 #H then V
+      (r1.center_x.. r2.center_x).each  do |x|
+        @dungeon.tiles[[x,r1.center_y]] = Tile.new(x=x, y=r1.center_y)
       end
-      (y1..y2).each do |y|
-        @dungeon.tiles[[x2,y]] = Tile.new(x=x2, y=y)
+      (r1.center_y..r2.center_y).each do |y|
+        @dungeon.tiles[[r2.center_x,y]] = Tile.new(x=r2.center_x, y=y)
       end
     else #V then H
-      (y1..y2).each do |y|
-        @dungeon.tiles[[x1,y]] = Tile.new(x=x1, y=y)
+      (r1.center_y..r2.center_y).each do |y|
+        @dungeon.tiles[[r1.center_x,y]] = Tile.new(x=r1.center_x, y=y)
       end
-      (x1..x2).each do |x|
-        @dungeon.tiles[[x,y2]] = Tile.new(x=x, y=y2)
+      (r1.center_x.. r2.center_x).each  do |x|
+        @dungeon.tiles[[x,r2.center_y]] = Tile.new(x=x, y=r2.center_y)
       end
     end
   end
