@@ -627,23 +627,19 @@ However, since our center-points are rarely going to line up exactly, we need to
 Let's start by adding the method `tile_between` to our DungeonMaker class, like so:
 ```ruby
 def tunnel_between(r2, r1)
-  x1 = [r1.center_x,r2.center_x].min
-  x2 = [r1.center_x,r2.center_x].max
-  y1 = [r1.center_y,r2.center_y].min
-  y2 = [r1.center_y,r2.center_y].max
   if [0,1].sample() == 0 #H then V
-    (x1..x2).each do |x|
-      @dungeon.tiles[[x,y1]] = Tile.new(x=x, y=y1)
+    (r1.center_x.. r2.center_x).each  do |x|
+      @dungeon.tiles[[x,r1.center_y]] = Tile.new(x=x, y=r1.center_y)
     end
-    (y1..y2).each do |y|
-      @dungeon.tiles[[x2,y]] = Tile.new(x=x2, y=y)
+    (r1.center_y..r2.center_y).each do |y|
+      @dungeon.tiles[[r2.center_x,y]] = Tile.new(x=r2.center_x, y=y)
     end
   else #V then H
-    (y1..y2).each do |y|
-      @dungeon.tiles[[x1,y]] = Tile.new(x=x1, y=y)
+    (r1.center_y..r2.center_y).each do |y|
+      @dungeon.tiles[[r1.center_x,y]] = Tile.new(x=r1.center_x, y=y)
     end
-    (x1..x2).each do |x|
-      @dungeon.tiles[[x,y2]] = Tile.new(x=x, y=y2)
+    (r1.center_x.. r2.center_x).each  do |x|
+      @dungeon.tiles[[x,r2.center_y]] = Tile.new(x=x, y=r2.center_y)
     end
   end
 end
