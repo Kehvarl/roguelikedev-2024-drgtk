@@ -8,9 +8,11 @@ def tick args
   if args.tick_count == 0
     player = Entity.new(x=40,y=20,char=[0,64],r=255,g=255,b=255)
     entities = [player, Entity.new(x=42,y=20,char=[0,64],r=255,g=255,b=0)]
-    args.state.engine = Engine.new(entities, player)
-    generator = DungeonMaker.new(args.state.engine)
-    args.state.game_map = generator.generate_dungeon(args)
+    generator = DungeonMaker.new()
+    game_map = generator.generate_dungeon(args)
+    player.position(generator.player_x, generator.player_y)
+    args.state.engine = Engine.new(entities, player, game_map)
+
   end
 
   events = []
@@ -28,6 +30,6 @@ def tick args
   args.state.engine.handle_events(events)
 
   args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
-  args.outputs.primitives << args.state.game_map.render()
+  args.outputs.primitives << args.state.engine.game_map.render()
   args.outputs.primitives << args.state.engine.render()
 end

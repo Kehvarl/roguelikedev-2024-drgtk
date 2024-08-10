@@ -9,7 +9,14 @@ class GameMap
   end
 
   def in_bounds(x,y)
-    (0 <= x <= @w) and (0 <= y < @h)
+    (0 <= x  and x <= @w) and (0 <= y and y < @h)
+  end
+
+  def valid_move(x,y)
+    x = x
+    y = y
+    puts("#{x}, #{y}")
+    (in_bounds(x,y) and ((not @tiles.key?([x,y])) or (not @tiles[[x,y]].blocks_movement)))
   end
 
   def render()
