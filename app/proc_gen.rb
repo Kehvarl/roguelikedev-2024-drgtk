@@ -29,12 +29,15 @@ class RectRoom
 end
 
 class DungeonMaker
-  def initialize(engine)
+  attr_accessor :player_x, :player_y
+  def initialize()
     @dungeon = GameMap.new()
-    @engine = engine
+    #@engine = engine
     @max_rooms = 10
     @room_min_size = 4
     @room_max_size = 10
+    @player_x = 0
+    @player_y = 0
   end
 
   def generate_dungeon(args)
@@ -57,7 +60,10 @@ class DungeonMaker
         end
       end
     end
-    @engine.player.position(rooms[0].center_x, rooms[0].center_y)
+    #@engine.player.position(rooms[0].center_x, rooms[0].center_y)
+    @player_x = rooms[0].center_x
+    @player_y = rooms[0].center_y
+
     return @dungeon
   end
 
