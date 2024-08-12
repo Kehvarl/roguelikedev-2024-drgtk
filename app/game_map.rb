@@ -15,8 +15,8 @@ class GameMap
   def valid_move(x,y)
     x = x
     y = y
-    puts("#{x}, #{y}")
-    (in_bounds(x,y) and ((not @tiles.key?([x,y])) or (not @tiles[[x,y]].blocks_movement)))
+    # puts("Valid? #{x}, #{y}: #{(in_bounds(x,y) and (@tiles.key?([x,y]) and (not @tiles[[x,y]].blocks_movement)))}")
+    (in_bounds(x,y) and (@tiles.key?([x,y]) and (not @tiles[[x,y]].blocks_movement)))
   end
 
   def render()

@@ -9,7 +9,8 @@ class Engine
   def handle_events(events)
       events.each do |event|
         if event.type == :player_move
-          if @game_map.valid_move(event.dx, event.dy)
+          r = @player.get_potential_move(event.dx, event.dy)
+          if @game_map.valid_move(r[0], r[1])
             @player.move(event.dx, event.dy)
           end
         end
