@@ -21,6 +21,10 @@ class Entity
     @y = y * 16
   end
 
+  def get_potential_move(dx, dy)
+    [@x.div(16) + dx, @y.div(16) + dy]
+  end
+
   def move (dx, dy)
     @x += (dx * 16)
     @y += (dy * 16)

@@ -1,5 +1,6 @@
 class Tile
   attr_sprite
+  attr_accessor :blocks_vision, :blocks_movement
 
   def initialize (x,y,char=[176, 208], r=50, g=50, b=100)
     @x = x * 16
