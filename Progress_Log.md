@@ -518,3 +518,12 @@ class GameMap
   end
 end
 ```
+
+
+
+## Cleanup thoughts
+Need to take a step back and look at several things
+1) Do I continue to use the Sprite classes or a dedicated entity class with a render function
+2) How do entities move, by grid square or by pixel
+3) How is the world represented, by grid squares or by pixels
+4) Do I build a proper event system like the tutorial or just pass the same messages as in the old Tutoria?
