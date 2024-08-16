@@ -524,7 +524,7 @@ end
 ## Cleanup thoughts
 Need to take a step back and look at several things
 1) Do I continue to use the Sprite classes or a dedicated entity class with a render function
-  a) depends on how I handle quesitons 2 and 3
+  a) depends on how I handle questions 2 and 3
 2) How do entities move, by grid square or by pixel
   a) pixel-aligned movement in 16-pixel increments would work
 3) How is the world represented, by grid squares or by pixels
