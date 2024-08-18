@@ -6,6 +6,8 @@ class GameMap
     @w = 80
     @h = 40
     @tiles = {}
+    @visible = []
+    @explored = []
   end
 
   def in_bounds(x,y)
