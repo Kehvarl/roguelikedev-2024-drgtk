@@ -530,3 +530,7 @@ Need to take a step back and look at several things
 3) How is the world represented, by grid squares or by pixels
   a) Let's work in pixels for the moment
 4) Do I build a proper event system like the tutorial or just pass the same messages as in the old Tutorial?
+
+
+Next up is field of view.
+Need to adjust how we draw tiles to track the ones that we've visited and the ones in visible range.
