@@ -534,5 +534,3 @@ Need to take a step back and look at several things
 
 Next up is field of view.
 Need to adjust how we draw tiles to track the ones that we've visited and the ones in visible range.
-
-no changes today
