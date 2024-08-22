@@ -167,6 +167,11 @@ end
 If you now run the game, you can move the player around the screen with the arrow keys
 ![Part 1.3](./screenshots/Part1.3.png?raw=true "Player sprite can now move around the screen in response to inputs")
 
+
+
+
+
+
 ## Part 2 - The generic Entity, the render functions, and the map
 We now have an @ symbol we can move around, but there's nothing for it to move around with.
 
@@ -174,7 +179,7 @@ We now have an @ symbol we can move around, but there's nothing for it to move a
 Our @ symbol currently exists as a hash in our game state.  We could continue with this approach and just add a variety of properties to the hash to account for things like hit-points, experience, level, and any other attributes we need to track, there is another approach: using a class.
 
 #### The Sprite Class
-We could create a class and give it some way to output the sprite we need to draw.  That might looks like this:
+We could create a class and give it some way to output the sprite we need to draw.  That might look something like this:
 ```ruby
 class Entity
   def initialize(x,y,w,h,tile_x,tile_y)
@@ -194,7 +199,7 @@ class Entity
   end
 end
 ```
-We could then build on this class as usual and after we perform our game logic on each tick we could then do something like this to render all our entities:
+We could then build on this class as usual and after we perform our game logic on each tick we could then do render all our entities by iterating over the collection:
 ```ruby
 Entities.each {|e|  args.outputs.primitives << e.render()}
 ```
@@ -209,15 +214,15 @@ We can convert our hash to a class like this:
 class Entity
   attr_sprite
 
-  def initialize (x,y,char=[0,64],r=255,g=255,b=255)
+  def initialize (x,y)
     @x = x
     @y = y
     @w = 16
     @h = 16
     @tile_w = 16
     @tile_h = 16
-    @tile_x = char[0]
-    @tile_y = char[1]
+    @tile_x = 0
+    @tile_y = 64
     @path ='sprites/misc/simple-mood-16x16.png'
     @r = r
     @g = g
@@ -233,12 +238,39 @@ We then define an `initialize` function which will be run when we call `Entity.n
 
 There are a few other member variables we're defining in `initialize`, specifically w, and h: the width and height to use when drawing our sprite; also tile_w and tile_h: the width and height of characters in our spritesheet.
 
-Let's create a new class `entity.rb` and populate it with our class, then modify our main.rb to use that class.  We'll set a color for our sprite so we can tell it's different from before:
+There's one other improvement we could make here.  An Entity may have a number of optional settings and we don't want to have to pass all of them in every time we create a new one.   Instead, we can make `Initialize` look for a hash of options and either use the value in the hash or use a sensible defualt
+
+```Ruby
+class Entity
+  attr_sprite
+
+  def initialize (vals={})
+    @pos_x = vals.x || 0
+    @pos_y = vals.y || 0
+    @x = @pos_x * 16
+    @y = @pos_y * 16
+    @w = 16
+    @h = 16
+    @tile_w = 16
+    @tile_h = 16
+    @tile_x = vals.char_c || 0
+    @tile_y = vals.char_r || 64
+    @path ='sprites/misc/simple-mood-16x16.png'
+    @r = vals.r || 255
+    @g = vals.g || 255
+    @b = vals.b || 255
+  end
+end
+```
+
+In this example we're passing in a hash named `vals`.  The `vals` hash can contain some or all of the entries to use to create the Entity.   To achieve this we're using the `||` operator.   Essentially, we check the hash first, and if the expected value isn't present, we fail over to our default.
+
+Let's create a new class `entity.rb` and populate it with our class as shown above, then modify our main.rb to use that class.  We'll set a color for our sprite so we can tell it's different from before:
 ```ruby
 require('app/entity.rb')
 
 def tick args
-  args.state.player ||= Entity.new(x=640,y=360,char=[0,64],r=255,g=255,b=0)
+  args.state.player ||= Entity.new({x:640, y:360, char_c:0, char_r:64})
   args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
   args.outputs.primitives << args.state.player
 # ...
