@@ -2,21 +2,21 @@ class Entity
   attr_sprite
   attr_accessor :pos_x, :pos_y
 
-  def initialize (args) #(x,y,char=[0,64],r=255,g=255,b=255)
-    @pos_x = args.x || 0
-    @pos_y = args.y || 0
+  def initialize (vals={})
+    @pos_x = vals.x || 0
+    @pos_y = vals.y || 0
     @x = @pos_x * 16
     @y = @pos_y * 16
     @w = 16
     @h = 16
     @tile_w = 16
     @tile_h = 16
-    @tile_x = args.char_c || 0
-    @tile_y = args.char_r || 64
+    @tile_x = vals.char_c || 0
+    @tile_y = vals.char_r || 64
     @path ='sprites/misc/simple-mood-16x16.png'
-    @r = args.r || 255
-    @g = args.g || 255
-    @b = args.b || 255
+    @r = vals.r || 255
+    @g = vals.g || 255
+    @b = vals.b || 255
   end
 
   def position(x, y)

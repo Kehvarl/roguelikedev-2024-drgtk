@@ -6,7 +6,7 @@ require('app/proc_gen.rb')
 
 def tick args
   if args.tick_count == 0
-    player = Entity.new({})
+    player = Entity.new()
     entities = [player, Entity.new({x:42, y:20, b:0})]
     generator = DungeonMaker.new()
     game_map = generator.generate_dungeon(args)
