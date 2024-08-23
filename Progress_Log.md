@@ -270,7 +270,7 @@ Let's create a new class `entity.rb` and populate it with our class as shown abo
 require('app/entity.rb')
 
 def tick args
-  args.state.player ||= Entity.new({x:640, y:360, char_c:0, char_r:64})
+  args.state.player ||= Entity.new({x:640, y:360, char_c:0, char_r:64, r:240, g: 240, b: 0})
   args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
   args.outputs.primitives << args.state.player
 # ...
@@ -338,8 +338,8 @@ Let's use that Entity class to spawn an NPC too.  In our `main.rb` update our in
 
 ```Ruby
 def tick args
-  args.state.player ||= Entity.new(x=40,y=20,char=[0,64],r=255,g=255,b=255)
-  args.state.entities ||= [args.state.player, Entity.new(x=42,y=20,char=[0,64],r=255,g=255,b=0)]
+  args.state.player ||= Entity.new({x:640, y:360, char_c:0, char_r:64, r:255, g:255, b:255})
+  args.state.entities ||= [args.state.player, Entity.new({x:42, y:20, char_c:0, char_r:64, r:255, g:255, b:0})]
   args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
   args.outputs.primitives << args.state.entities
   #...
