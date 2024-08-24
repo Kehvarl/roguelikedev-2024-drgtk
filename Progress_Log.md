@@ -352,15 +352,17 @@ We've created a new array of antities and put our player entity into it.  We've 
 ### The Game Engine
 The Python+TCOD tutorial uses a class named Engine to hold the entities, process input events, handle game logic, and manage rendering.
 
-DragonRuby itself can act as our game engine with `args` acting as our tool for receiving input, tracking state, and outputting to the screen.  However, sometimes it's helpful to encapsulate game logic into a class designed to manage it.  Such a class might look like the following.
+DragonRuby itself could act as our game engine with `args` acting as our tool for receiving input, tracking state, and outputting to the screen.  However, sometimes it's helpful to encapsulate game logic into a class designed to manage it.  Such a class might look like the following.
 
 #### The Engine Class
 First, create the file `engine.rb` then populate it like so
 ```ruby
 class Engine
-  def initialize(entities, player)
+  attr_accessor :entities, :player, :game_map
+  def initialize(entities, player, game_map)
     @entities = entities
     @player = player
+    @game_map = game_map
   end
 
   def handle_events(events)
@@ -384,7 +386,7 @@ def initialize(entities, player)
   @player = player
 end
 ```
-We create class members that store the entity array and reference to the player entity.  We can use these for rendering later, and also to interact with our player entity.  
+We create class members that store the entity array and reference to the player entity.  We can use these for rendering later, and also to interact with our player entity.
 
 ```ruby
 def handle_events(events)
@@ -412,8 +414,8 @@ require('app/engine.rb')
 
 def tick args
   if args.tick_count == 0
-    player = Entity.new(x=40,y=20,char=[0,64],r=255,g=255,b=255)
-    entities = [player, Entity.new(x=42,y=20,char=[0,64],r=255,g=255,b=0)]
+    player = Entity.new({x:40,y:20,char_r:0,char_c:0})
+    entities = [player, Entity.new({x:42,y:20,char_r:0,char_c:0,r=255,g=255,b=0)]
     args.state.engine = Engine.new(entities, player)
   end
 
@@ -464,6 +466,8 @@ args.state.engine.handle_events(events)
 ```
 
 Essentially, we create an events list, and simply append all our events to it.  In this case the list is only ever one item long, but future edits can change that.
+
+
 
 ### The Game Map
 With our Engine class handling most of the heavy lifting so far, and both our player and NPC on the screen, it's time to give the player something to explore.   We won't go into procedural generation yet, but we'll build a class to hold and display a map on the screen, and allow us to move around its corridors and rooms.
