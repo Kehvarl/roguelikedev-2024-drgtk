@@ -71,7 +71,7 @@ class DungeonMaker
     (room.y1+1..room.y2).each do |y|
       (room.x1+1..room.x2).each do |x|
         if not @dungeon.tiles.key?([x,y])
-          @dungeon.tiles[[x,y]] = Tile.new(x=x, y=y, char=[176, 208], r=100, g=100, b=100)
+          @dungeon.tiles[[x,y]] = Tile.new({x:x,y:y,r:100,g:100,b:100})
         end
       end
     end
@@ -80,17 +80,17 @@ class DungeonMaker
   def tunnel_between(r2, r1)
     if [0,1].sample() == 0 #H then V
       (r1.center_x.. r2.center_x).each  do |x|
-        @dungeon.tiles[[x,r1.center_y]] = Tile.new(x=x, y=r1.center_y)
+        @dungeon.tiles[[x,r1.center_y]] = Tile.new({x:x, y:r1.center_y})
       end
       (r1.center_y..r2.center_y).each do |y|
-        @dungeon.tiles[[r2.center_x,y]] = Tile.new(x=r2.center_x, y=y)
+        @dungeon.tiles[[r2.center_x,y]] = Tile.new({x:r2.center_x, y:y})
       end
     else #V then H
       (r1.center_y..r2.center_y).each do |y|
-        @dungeon.tiles[[r1.center_x,y]] = Tile.new(x=r1.center_x, y=y)
+        @dungeon.tiles[[r1.center_x,y]] = Tile.new({x:r1.center_x, y:y})
       end
       (r1.center_x.. r2.center_x).each  do |x|
-        @dungeon.tiles[[x,r2.center_y]] = Tile.new(x=x, y=r2.center_y)
+        @dungeon.tiles[[x,r2.center_y]] = Tile.new({x:x, y:r2.center_y})
       end
     end
   end

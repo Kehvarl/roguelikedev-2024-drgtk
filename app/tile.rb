@@ -2,20 +2,20 @@ class Tile
   attr_sprite
   attr_accessor :blocks_vision, :blocks_movement
 
-  def initialize (x,y,char=[176, 208], r=50, g=50, b=100)
-    @x = x * 16
-    @y = y * 16
+  def initialize args
+    @x = args.x * 16 || 0
+    @y = args.y * 16 || 0
     @w = 16
     @h = 16
     @tile_w = 16
     @tile_h = 16
-    @tile_x = char[0]
-    @tile_y = char[1]
+    @tile_x = args.char_c || 176
+    @tile_y = args.char_r || 208
     @path ='sprites/misc/simple-mood-16x16.png'
-    @r = r
-    @g = g
-    @b = b
-    @blocks_movement
-    @blocks_vision
+    @r = args.r || 50
+    @g = args.g || 50
+    @b = args.b || 50
+    @blocks_movement = false
+    @blocks_vision = false
   end
 end

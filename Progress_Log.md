@@ -479,34 +479,43 @@ Create a new file named `tiles.rb` and populate it like so:
 ```ruby
 class Tile
   attr_sprite
+  attr_accessor :blocks_vision, :blocks_movement
 
-  def initialize(x, y, char=[176, 208], r=50, b=50, g=100)
-    @x = x * 16
-    @y = y * 16
+  def initialize vals
+    @x = vals.x * 16 || 0
+    @y = vals.y * 16 || 0
     @w = 16
     @h = 16
     @tile_w = 16
     @tile_h = 16
-    @tile_x = char[0]
-    @tile_y = char[1]
+    @tile_x = vals.char_c || 176
+    @tile_y = vals.char_r || 208
     @path ='sprites/misc/simple-mood-16x16.png'
-    @r = r
-    @g = g
-    @b = b
-    @blocks_movement
-    @blocks_vision
+    @r = vals.r || 50
+    @g = vals.g || 50
+    @b = vals.b || 50
+    @blocks_movement = false
+    @blocks_vision = false
   end
 end
 ```
 
+Our Tile is a basic Sprite with a couple of extra features.  Specifically, we've added attributes and accessors for `blocks_movement` for those tiles you can't walk through, and `blocks_vision` for those that can't be seen through.
+
+
 #### The GameMap class
+
+We'll use these Tiles in our GameMap class.  The GameMap basically holds a hash of the tiles we carve into the map.  Anything not in this hash will be assumed to be a solid wall, which saves us from storing tiles for all the possible unreachable points in our map.  For convenience, the GameMap will implement a grid and grid coordinates will be the keys for the Tile Hash.  A grid cell is basically a 16x16 pixel region of the map, and represents the space that can be inhabited by a Tile or Entity.
+
+For the first pass, we'll implement some room carving in the GameMap itself which will take a rectangle of grid coordinates and add the appropriate tiles in those positions.
+
 We'll start a new file: `game_map.rb` with the following contents:
 ```ruby
 class GameMap
   def initialize()
     @w = 80
     @h = 40
-    @tiles = []
+    @tiles = {}
   end
 
   def in_bounds(x,y)
@@ -542,7 +551,7 @@ class GameMap
       def carve(room)
         (room.y1+1..room.y2).each do |y|
           (room.x1+1..room.x2).each do |x|
-            @dungeon.tiles[[x,y]] = Tile.new(x=x, y=y)
+            @dungeon.tiles[[x,y]] = Tile.new({x:x, y:y})
           end
         end
       end
@@ -554,19 +563,3 @@ class GameMap
   end
 end
 ```
-
-
-
-## Cleanup thoughts
-Need to take a step back and look at several things
-1) Do I continue to use the Sprite classes or a dedicated entity class with a render function
-  a) depends on how I handle questions 2 and 3
-2) How do entities move, by grid square or by pixel
-  a) pixel-aligned movement in 16-pixel increments would work
-3) How is the world represented, by grid squares or by pixels
-  a) Let's work in pixels for the moment
-4) Do I build a proper event system like the tutorial or just pass the same messages as in the old Tutorial?
-
-
-Next up is field of view.
-Need to adjust how we draw tiles to track the ones that we've visited and the ones in visible range.
