@@ -519,20 +519,10 @@ class GameMap
     @h = 40
     @tiles = {}
 
-    room_1 = {x1:20,y1:20,x2:30,y2:30}
-    room_2 = {x1:40,y1:25,x2:50,y2:35}
+    @tiles[30,22] = Tile.new({x:30, y:22})
+    @tiles[31,22] = Tile.new({x:31, y:22})
+    @tiles[32,22] = Tile.new({x:32, y:22})
 
-    carve(room_1)
-    carve(room_2)
-  end
-
-  def carve(room)
-    (room.y1+1..room.y2).each do |y|
-      (room.x1+1..room.x2).each do |x|
-          @tiles[[x,y]] = Tile.new({x:x,y:y,r:100,g:100,b:100})
-        end
-      end
-    end
   end
 
   def render()
@@ -544,3 +534,37 @@ class GameMap
   end
 end
 ```
+
+This will draw some tiles like a wall on our map.
+
+
+
+
+## Part 3 - Generating a Dungeon
+We'll start by throwing away the part of our GameMap that draws a wall, and we'll think about how we represent rooms and corridors on our map.  Instead of drawing every wall, we can consider everything a wall unless we place a non-wall tile there.   Our modified generation-ready GameMap will look like:
+
+```Ruby
+class GameMap
+  attr_accessor :tiles, :w, :h
+  def initialize()
+    @w = 80
+    @h = 40
+    @tiles = {}
+  end
+
+  def render()
+    out = []
+    @tiles.each_key do |t|
+      out << @tiles[t]
+    end
+    out
+  end
+end
+```
+
+As you can see, it's stripped down to the bare minimum to hold a map and render it.
+
+### Dendering
+Our GameMap render function is a little complicated.  Since we're storing our map in a hash instead of an array, we can't just output the hash to DragonRuby.  Instead we iterate through all the tiles, and add each one to an array.  Then return that array which we can pass to DragonRuby to draw.
+
+### Defining a Room
