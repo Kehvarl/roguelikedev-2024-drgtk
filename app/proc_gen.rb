@@ -9,7 +9,6 @@ class Range
    end
 end
 
-
 class RectRoom
   attr_accessor :x1, :y1, :x2, :y2, :center_x, :center_y, :x, :y, :w, :h
   def initialize (x, y, w, h)
@@ -24,9 +23,8 @@ class RectRoom
     @center_x = @x1 + w.div(2)
     @center_y = @y1 + h.div(2)
   end
-
-
 end
+
 
 class DungeonMaker
   attr_accessor :player_x, :player_y
