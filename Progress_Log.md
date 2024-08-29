@@ -592,7 +592,14 @@ end
 This literally is just a quick tool to define a "room" and calculate some useful values.   We can pass in the X and Y position at which the top corner of the room is positioned, and both W and H for the "width" and "height".  Using these we can calculate the X1, Y1 of the top left corner, and the X2, Y2 of the bottom right corner.  We can also get an approximate center point of the room for future use.
 
 #### The Dungeon Maker
-We'll define a class that builds a dungeon map and passes it to us for 
+We'll define a class that builds a dungeon map and passes it to us for use in our Engine.
+
+The DungeonMaker will create the copy of GameMap to use, and pass it to us, this means the file will need access to the GameMap class.  At the top of our `proc_gen.rb` file, add this line:
+```Ruby
+require('app/game_map.rb')
+```
+
+
 ```ruby
 class DungeonMaker
   attr_accessor :player_x, :player_y
