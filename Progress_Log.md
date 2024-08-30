@@ -599,6 +599,7 @@ The DungeonMaker will create the copy of GameMap to use, and pass it to us, this
 require('app/game_map.rb')
 ```
 
+DungeonMaker basically just builds a GameMap, carves rooms out of it, and provides the ready map for our game to work with.  It needs to have a few things to start with, so let's work on `initialize`...
 
 ```ruby
 class DungeonMaker
