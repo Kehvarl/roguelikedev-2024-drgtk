@@ -599,44 +599,20 @@ The DungeonMaker will create the copy of GameMap to use, and pass it to us, this
 require('app/game_map.rb')
 ```
 
-DungeonMaker basically just builds a GameMap, carves rooms out of it, and provides the ready map for our game to work with.  It needs to have a few things to start with, so let's work on `initialize`...
+DungeonMaker basically just builds a GameMap, carves rooms out of it, and provides the ready map for our game to work with.  It needs to have a few things to start with, so let's work on it.   The class needs to create and manage a copy of GameMap, and then it's going to use our RectRooms to carve a couple of sample rooms.   Which means we'll need to define the rooms and have a routine to do that carving.
 
 ```ruby
 class DungeonMaker
-  attr_accessor :player_x, :player_y
   def initialize()
     @dungeon = GameMap.new()
-    #@engine = engine
-    @max_rooms = 10
-    @room_min_size = 4
-    @room_max_size = 10
-    @player_x = 0
-    @player_y = 0
   end
 
   def generate_dungeon(args)
-    rooms = []
-    (0...@max_rooms).each do
-      rw = (@room_min_size...@room_max_size).to_a.sample
-      rh = (@room_min_size...@room_max_size).to_a.sample
-      x = (0...(@dungeon.w - rw - 1)).to_a.sample
-      y = (0...(@dungeon.h - rh - 1)).to_a.sample
+    room_1 = RectRoom.new(20,20,10,10)
+    room_2 = RectRoom.new(40,25,10,10)
 
-      new_room = RectRoom.new(x, y, rw, rh)
-
-      collisions = args.geometry.find_all_intersect_rect(new_room, rooms)
-      if collisions.size == 0
-        puts("#{new_room.center_x}, #{new_room.center_y}")
-        rooms << new_room
-        carve(new_room)
-        if rooms.size > 1
-          tunnel_between(rooms[-2], new_room)
-        end
-      end
-    end
-    #@engine.player.position(rooms[0].center_x, rooms[0].center_y)
-    @player_x = rooms[0].center_x
-    @player_y = rooms[0].center_y
+    carve(room_1)
+    carve(room_2)
 
     return @dungeon
   end
@@ -647,24 +623,6 @@ class DungeonMaker
         if not @dungeon.tiles.key?([x,y])
           @dungeon.tiles[[x,y]] = Tile.new({x:x,y:y,r:100,g:100,b:100})
         end
-      end
-    end
-  end
-
-  def tunnel_between(r2, r1)
-    if [0,1].sample() == 0 #H then V
-      (r1.center_x.. r2.center_x).each  do |x|
-        @dungeon.tiles[[x,r1.center_y]] = Tile.new({x:x, y:r1.center_y})
-      end
-      (r1.center_y..r2.center_y).each do |y|
-        @dungeon.tiles[[r2.center_x,y]] = Tile.new({x:r2.center_x, y:y})
-      end
-    else #V then H
-      (r1.center_y..r2.center_y).each do |y|
-        @dungeon.tiles[[r1.center_x,y]] = Tile.new({x:r1.center_x, y:y})
-      end
-      (r1.center_x.. r2.center_x).each  do |x|
-        @dungeon.tiles[[x,r2.center_y]] = Tile.new({x:x, y:r2.center_y})
       end
     end
   end
