@@ -628,3 +628,7 @@ class DungeonMaker
   end
 end
 ```
+
+We can then call this from our Main and pass the GameMap to our engine
+
+![Part 3.1](./screenshots/Part3.1.png?raw=true "Drawing rooms")
