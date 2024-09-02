@@ -628,3 +628,25 @@ class DungeonMaker
   end
 end
 ```
+
+We can then call this from our Main and pass the GameMap to our engine
+At the top of our `main.rb`:
+```ruby
+# ...
+require('app/proc_gen.rb')
+```
+
+```ruby
+def tick args
+  if args.tick_count == 0
+    player = Entity.new({ x: 25, y: 20})
+    entities = [player, Entity.new({x:42, y:20, b:0})]
+    generator = DungeonMaker.new()
+    game_map = generator.generate_dungeon(args)
+    args.state.engine = Engine.new(entities, player, game_map)
+
+  end
+# ...
+```
+
+![Part 3.1](./screenshots/Part3.1.png?raw=true "Drawing rooms")
