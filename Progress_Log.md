@@ -650,3 +650,79 @@ def tick args
 ```
 
 ![Part 3.1](./screenshots/Part3.1.png?raw=true "Drawing rooms")
+
+
+#### Generating Rooms
+Of course, we don't actually want to define every room in our map, we want to generate them.  We have a convenient RectRoom class, we know our map width and height, if we game ourselves a few more parameters, we could randomly create rooms.  In fact, we really only need 3 more things:  The maximum number of rooms in our map, the smallest size a room can be, and the largest size a room can be.   If we put those into our class and assign some default values, our new `initialize` function for `DungeonMaker` might look like so:
+
+```ruby
+  def initialize()
+    @dungeon = GameMap.new()
+    @max_rooms = 10
+    @room_min_size = 4
+    @room_max_size = 10
+  end
+```
+
+And given those variables, we can tweak our `generate_dungeon` method to be something like this:
+```Ruby
+  def generate_dungeon(args)
+    rooms = []
+    (0...@max_rooms).each do
+      rw = (@room_min_size...@room_max_size).to_a.sample
+      rh = (@room_min_size...@room_max_size).to_a.sample
+      x = (0...(@dungeon.w - rw - 1)).to_a.sample
+      y = (0...(@dungeon.h - rh - 1)).to_a.sample
+
+      new_room = RectRoom.new(x, y, rw, rh)
+
+      collisions = args.geometry.find_all_intersect_rect(new_room, rooms)
+      if collisions.size == 0
+        rooms << new_room
+        carve(new_room)
+      end
+    end
+
+    return @dungeon
+  end
+```
+      new_room = RectRoom.new(x, y, rw, rh)
+
+      collisions = args.geometry.find_all_intersect_rect(new_room, rooms)
+      if collisions.size == 0
+        rooms << new_room
+        carve(new_room)
+      end
+This won't actually work yet, but before we get to why, let's dig into what this is doing.
+
+```ruby
+    (0...@max_rooms).each do
+      # ...
+    end
+```
+This is the equivalent of a "for" loop in other languages.   We're creating a range from 0 to `max_rooms`, which in our case is 10.  Then for each value in that range we run our loop body.
+
+The first thing out loop does is generate 4 random numbers:
+```ruby
+    rw = (@room_min_size...@room_max_size).to_a.sample
+    rh = (@room_min_size...@room_max_size).to_a.sample
+    x = (0...(@dungeon.w - rw - 1)).to_a.sample
+    y = (0...(@dungeon.h - rh - 1)).to_a.sample
+```
+Once again, we're abusing ranges.  The first example: `rw = (@room_min_size...@room_max_size).to_a.sample` creates a range of the values from our min_size to our max_size, converts that to an array, then picks a value from the array at random.  There are better ways to pick a random integer in a range, but this one works for our purposes.   The other 3 variables are set in much the same way.
+
+Now onto the fun part:
+```ruby
+    new_room = RectRoom.new(x, y, rw, rh)
+
+    collisions = args.geometry.find_all_intersect_rect(new_room, rooms)
+    if collisions.size == 0
+      rooms << new_room
+      carve(new_room)
+    end
+```
+First we define a new RectRoom with our random values.
+Then we test that room against all our existing rooms (if any).
+If the new room doesn't overlap with any other previously defined rooms, then we add it to our rooms list and carve it into our GameMap.   The rooms list comes into play in the next feature.
+
+#### Corridors
