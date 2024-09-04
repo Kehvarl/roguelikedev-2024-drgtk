@@ -78,7 +78,7 @@ A minimal sprite hash definition looks like
 As with the solid, it expects an x and y position for the lower left corner, then a width and height.  Instead of a color, it looks for a path to the image to use.  There are several other properties we can work with, but they all have sensible defaults.  For more details, refer to the [DragonRuby Documentation: API: Outputs: Sprites: Rendering a Sprite Using a Hash](http://docs.dragonruby.org.s3-website-us-east-1.amazonaws.com/#/api/outputs?id=rendering-a-sprite-using-a-hash)
 
 Update the `tick` method of your `main.rb` file to look like this:
-```Ruby
+```ruby
 def tick args
   args.outputs.primitives << {x:0, y:0, w:1280, h:720, r:0, g:0, b:0}.solid!
   args.outputs.primitives << {x:640, y:360, w:40, h:40, path:'sprites/square/blue.png'}.sprite!
@@ -240,7 +240,7 @@ There are a few other member variables we're defining in `initialize`, specifica
 
 There's one other improvement we could make here.  An Entity may have a number of optional settings and we don't want to have to pass all of them in every time we create a new one.   Instead, we can make `Initialize` look for a hash of options and either use the value in the hash or use a sensible defualt
 
-```Ruby
+```ruby
 class Entity
   attr_sprite
 
@@ -336,7 +336,7 @@ class Entity
 
 Let's use that Entity class to spawn an NPC too.  In our `main.rb` update our initialization code:
 
-```Ruby
+```ruby
 def tick args
   args.state.player ||= Entity.new({x:640, y:360, char_c:0, char_r:64, r:255, g:255, b:255})
   args.state.entities ||= [args.state.player, Entity.new({x:42, y:20, char_c:0, char_r:64, r:255, g:255, b:0})]
@@ -543,7 +543,7 @@ This will draw some tiles like a wall on our map.
 ## Part 3 - Generating a Dungeon
 We'll start by throwing away the part of our GameMap that draws a wall, and we'll think about how we represent rooms and corridors on our map.  Instead of drawing every wall, we can consider everything a wall unless we place a non-wall tile there.   Our modified generation-ready GameMap will look like:
 
-```Ruby
+```ruby
 class GameMap
   attr_accessor :tiles, :w, :h
   def initialize()
@@ -665,7 +665,7 @@ Of course, we don't actually want to define every room in our map, we want to ge
 ```
 
 And given those variables, we can tweak our `generate_dungeon` method to be something like this:
-```Ruby
+```ruby
   def generate_dungeon(args)
     rooms = []
     (0...@max_rooms).each do
@@ -726,3 +726,65 @@ Then we test that room against all our existing rooms (if any).
 If the new room doesn't overlap with any other previously defined rooms, then we add it to our rooms list and carve it into our GameMap.   The rooms list comes into play in the next feature.
 
 #### Corridors
+We have rooms randomly placed on the map, and our rooms have a convenient center point.  We can pretty easily carve corridors that connect those two center points.  One approach would be:
+
+```ruby
+  def tunnel_between(r2, r1)
+    (r1.center_x.. r2.center_x).each  do |x|
+      @dungeon.tiles[[x,r1.center_y]] = Tile.new({x:x, y:r1.center_y})
+    end
+    (r1.center_y..r2.center_y).each do |y|
+      @dungeon.tiles[[r2.center_x,y]] = Tile.new({x:r2.center_x, y:y})
+    end
+  end
+```
+
+This will carve a horizontal corridor from the center of room_1 to the center_x of room_2.  Then a vertical corridor from that end point to the center of room_2.
+
+Unfortunately, it doesn't work.  If we run it, we will almost certainly end up with some rooms with no connections, and some corridors dead ending in space.  The reason for this is simple: we set up our iterator using a range, for example: `(r1.cemter_x.. r2.center_x)`m and ranges are designed to count up, not down.   We could modify our approach; but because this is Ruby, we can also just change how ranges work.   At the top of our file, just after the `require` lines, let's add a new class:
+
+```ruby
+class Range
+   def each
+     if self.first < self.last
+       self.first.upto(last)  { |i| yield i}
+     else
+       self.first.downto(last) { |i|  yield i }
+     end
+   end
+end
+```
+
+This class extends the built-in Range, and changes how it works.  Instead of always returning the values from first counting up to last, it can now also return values from first counting down to last.
+
+A quick save, run, and now we have a map with usable corridors.
+
+One further change, it's boring if the corridors are always horizontal, then vertical.   It might be nice to have it sometime be vertical first, then horizontal.   Like so:
+
+```ruby
+  def tunnel_between(r2, r1)
+    if [0,1].sample() == 0 #H then V
+      (r1.center_x.. r2.center_x).each  do |x|
+        @dungeon.tiles[[x,r1.center_y]] = Tile.new({x:x, y:r1.center_y})
+      end
+      (r1.center_y..r2.center_y).each do |y|
+        @dungeon.tiles[[r2.center_x,y]] = Tile.new({x:r2.center_x, y:y})
+      end
+    else #V then H
+      (r1.center_y..r2.center_y).each do |y|
+        @dungeon.tiles[[r1.center_x,y]] = Tile.new({x:r1.center_x, y:y})
+      end
+      (r1.center_x.. r2.center_x).each  do |x|
+        @dungeon.tiles[[x,r2.center_y]] = Tile.new({x:x, y:r2.center_y})
+      end
+    end
+  end
+```
+
+Thus ends part 3 and we're on to part 4 Next
+
+
+
+
+
+## Part 4 - Field of View
