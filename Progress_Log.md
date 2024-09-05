@@ -788,3 +788,15 @@ Thus ends part 3 and we're on to part 4 Next
 
 
 ## Part 4 - Field of View
+We now have a dungeon and we can wander around in it.  However, there's not a lot of exploration involved when the entire map is visible from the beginning.  Though a game could certainly be made to work without a hidden map, if that suits the mood you want to builds
+
+As we explore, there are really 3 states a tile can be in:
+  * Unexplored/Unknown
+  * Explored
+  * Visible
+
+An Unexplored tile is one that hasn't ever been revealed to the player, it conceals mystery and infinite possibility.
+
+An Explored tile is one that has been visited, but is currently not in the players field of view.  Anything could be happening there and the player would never know.
+
+Finally, a Visible tile is one currently in the Player's field of view.  It holds few mysteries, unless there are hidden or invisible things.
