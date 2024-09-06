@@ -69,7 +69,7 @@ class DungeonMaker
     (room.y1+1..room.y2).each do |y|
       (room.x1+1..room.x2).each do |x|
         if not @dungeon.tiles.key?([x,y])
-          @dungeon.tiles[[x,y]] = Tile.new({x:x,y:y,r:100,g:100,b:100})
+          @dungeon.tiles[[x,y]] = Tile.new({x:x,y:y,dark:{r:100,g:100,b:100},light:{r:164,g:164,b:164}})
         end
       end
     end
