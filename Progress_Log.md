@@ -591,7 +591,7 @@ end
 
 This literally is just a quick tool to define a "room" and calculate some useful values.   We can pass in the X and Y position at which the top corner of the room is positioned, and both W and H for the "width" and "height".  Using these we can calculate the X1, Y1 of the top left corner, and the X2, Y2 of the bottom right corner.  We can also get an approximate center point of the room for future use.
 
-#### The Dungeon Maker
+### The Dungeon Maker
 We'll define a class that builds a dungeon map and passes it to us for use in our Engine.
 
 The DungeonMaker will create the copy of GameMap to use, and pass it to us, this means the file will need access to the GameMap class.  At the top of our `proc_gen.rb` file, add this line:
@@ -652,7 +652,7 @@ def tick args
 ![Part 3.1](./screenshots/Part3.1.png?raw=true "Drawing rooms")
 
 
-#### Generating Rooms
+### Generating Rooms
 Of course, we don't actually want to define every room in our map, we want to generate them.  We have a convenient RectRoom class, we know our map width and height, if we game ourselves a few more parameters, we could randomly create rooms.  In fact, we really only need 3 more things:  The maximum number of rooms in our map, the smallest size a room can be, and the largest size a room can be.   If we put those into our class and assign some default values, our new `initialize` function for `DungeonMaker` might look like so:
 
 ```ruby
@@ -725,7 +725,7 @@ First we define a new RectRoom with our random values.
 Then we test that room against all our existing rooms (if any).
 If the new room doesn't overlap with any other previously defined rooms, then we add it to our rooms list and carve it into our GameMap.   The rooms list comes into play in the next feature.
 
-#### Corridors
+### Corridors
 We have rooms randomly placed on the map, and our rooms have a convenient center point.  We can pretty easily carve corridors that connect those two center points.  One approach would be:
 
 ```ruby
@@ -790,6 +790,8 @@ Thus ends part 3 and we're on to part 4 Next
 ## Part 4 - Field of View
 We now have a dungeon and we can wander around in it.  However, there's not a lot of exploration involved when the entire map is visible from the beginning.  Though a game could certainly be made to work without a hidden map, if that suits the mood you want to builds
 
+### Tile State
+
 As we explore, there are really 3 states a tile can be in:
   * Unexplored/Unknown
   * Explored
@@ -800,3 +802,15 @@ An Unexplored tile is one that hasn't ever been revealed to the player, it conce
 An Explored tile is one that has been visited, but is currently not in the players field of view.  Anything could be happening there and the player would never know.
 
 Finally, a Visible tile is one currently in the Player's field of view.  It holds few mysteries, unless there are hidden or invisible things.
+
+#### Tracking Tile state
+There are basically 3 places we can track the U/E/V state of a tile:
+ 1. The Game Map.  This makes sense as the tiles are already part of the map.  It basically makes "Tile State" an intrinsic property of the tiles
+
+ 2. The Engine.  The engine already houses the GameMap, and it handles all actions.  Having it track the state of every tile might work.
+
+ 3. The Entity.  If we want every entity to maintain its own "Fog of War", know what it can see, and know the layout of places it has explored already, this is the way to do it.  Definitely an option for a more advanced future game.
+
+ In our case we'll use the GameMap.  We can even leverage the map's rendering function to handle the drawing for us instead.
+
+ 
