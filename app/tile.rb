@@ -1,6 +1,6 @@
 class Tile
   attr_sprite
-  attr_accessor :blocks_vision, :blocks_movement
+  attr_accessor :blocks_vision, :blocks_movement, :visited
 
   def initialize args
     @x = args.x * 16 || 0
@@ -15,12 +15,9 @@ class Tile
     @dark = args.dark || {r:50,g:50,b:50}
     @light = args.light || {r:100,g:100,b:100}
     set_color(@dark)
+    @visited = false
     @blocks_movement = false
     @blocks_vision = false
-  end
-
-  def visited
-    set_color(@light)
   end
 
   def set_color(color)

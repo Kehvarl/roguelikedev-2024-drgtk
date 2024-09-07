@@ -23,7 +23,9 @@ class GameMap
   def render()
     out = []
     @tiles.each_key do |t|
-      out << @tiles[t]
+      if @tiles[t].visited
+        out << @tiles[t]
+      end
     end
     out
   end
