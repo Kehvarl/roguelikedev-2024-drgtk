@@ -813,4 +813,9 @@ There are basically 3 places we can track the U/E/V state of a tile:
 
  In our case we'll use the GameMap.  We can even leverage the map's rendering function to handle the drawing for us instead.
 
- 
+### Field of View
+Now that we've hidden the entirety of our map, we need to start revealing the parts we can see.  There are several ways to go about this, the two we're doing to look into are the simple approach, and recursive shadow casting.  We'll look at them in reverse order.
+
+ * Recursive Shadow Casting:   Red Blob Games links to an Albert Ford article on the topic: https://www.albertford.com/shadowcasting/.  In essence, we draw a cone that we might see, then starting from the character, we draw a line out to each point on the edge, if we encounter any object, then we mark all further tiles on the map as hidden.  Then we just draw those tiles we didn't mark as hidden.  We can even repeat this all the way around a circle and illuminate 360 degrees in a sensible way.
+
+ * A simple approach:  We'll do this first, then implement recursive shadow casting to replace it.  This solution however, will basically be us drawing a circle around the character, and illuminating all tiles in range regardless of line of site.
