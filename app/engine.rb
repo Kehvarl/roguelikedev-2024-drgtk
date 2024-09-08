@@ -12,9 +12,11 @@ class Engine
           r = @player.get_potential_move(event.dx, event.dy)
           if @game_map.valid_move(r[0], r[1])
             @player.move(event.dx, event.dy)
+            @game_map.calculate_fov(@player.x, @player.y)
           end
         end
       end
+
   end
 
   def render
