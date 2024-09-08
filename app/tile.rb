@@ -20,6 +20,14 @@ class Tile
     @blocks_vision = false
   end
 
+  def light()
+    set_color(@light)
+  end
+
+  def dark()
+    set_color(@dark)
+  end
+
   def set_color(color)
     @r = color.r
     @g = color.g
