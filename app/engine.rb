@@ -16,7 +16,6 @@ class Engine
           end
         end
       end
-
   end
 
   def render

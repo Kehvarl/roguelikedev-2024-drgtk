@@ -13,7 +13,6 @@ class GameMap
     @tiles.each_key do |t|
       tx = @tiles[t].x
       ty = @tiles[t].y
-      puts("#{x}, #{tx}, #{y}, #{ty}, #{Math.sqrt((x-tx)**2 + (y-ty)**2)}")
 
       if Math.sqrt((x-tx)**2 + (y-ty)**2) <= 160
         @tiles[t].light

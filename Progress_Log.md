@@ -820,4 +820,28 @@ Now that we've hidden the entirety of our map, we need to start revealing the pa
 
  * A simple approach:  We'll do this first, then implement recursive shadow casting to replace it.  This solution however, will basically be us drawing a circle around the character, and illuminating all tiles in range regardless of line of site.
 
- 
+ #### A Simple circle
+ In our Game_Map, let's add a function to do simple circular field of View
+ We'll iterate through all the tiles in the map, if they're within, say 10 tiles of the player we'll mark them as lit and mark them as visited so our rendering will work.  Otherwise they're dark tiles which will only be rendered if they've been visited previously.
+ ```ruby
+ def calculate_fov(x, y)
+   @tiles.each_key do |t|
+     tx = @tiles[t].x
+     ty = @tiles[t].y
+
+     if Math.sqrt((x-tx)**2 + (y-ty)**2) <= 160
+       @tiles[t].light
+       @tiles[t].visited = true
+     else
+       @tiles[t].dark
+     end
+   end
+ end
+ ```
+
+ #### Recursive Shadow Casting
+ For our implementation we'll be referencing several very good examples
+ * [Red Blob Games](https://www.redblobgames.com/articles/visibility/)
+ * [Albert Ford](https://www.albertford.com/shadowcasting/)
+ * [Rogue Basin](https://www.roguebasin.com/index.php/FOV_using_recursive_shadowcasting)
+ * [Rogue Basin Ruby Implementation](https://www.roguebasin.com/index.php/Ruby_shadowcasting_implementation)
