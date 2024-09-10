@@ -823,6 +823,7 @@ Now that we've hidden the entirety of our map, we need to start revealing the pa
  #### A Simple circle
  In our Game_Map, let's add a function to do simple circular field of View
  We'll iterate through all the tiles in the map, if they're within, say 10 tiles of the player we'll mark them as lit and mark them as visited so our rendering will work.  Otherwise they're dark tiles which will only be rendered if they've been visited previously.
+ The key part is our distance calculation `Math.sqrt((x-tx)**2 + (y-ty)**2)`  Which basically used the Pythagorean theorem to plot the distance between 2 points given the difference in x and y values.
  ```ruby
  def calculate_fov(x, y)
    @tiles.each_key do |t|
@@ -836,6 +837,21 @@ Now that we've hidden the entirety of our map, we need to start revealing the pa
        @tiles[t].dark
      end
    end
+ end
+ ```
+
+ To make use of this, we'll tweak our Engine to call this function every frame.  We need to do it here because we need to pass in the player X and Y coordinates to make this work.
+ ```ruby
+ def handle_events(events)
+     events.each do |event|
+       if event.type == :player_move
+         r = @player.get_potential_move(event.dx, event.dy)
+         if @game_map.valid_move(r[0], r[1])
+           @player.move(event.dx, event.dy)
+           @game_map.calculate_fov(@player.x, @player.y)
+         end
+       end
+     end
  end
  ```
 
