@@ -861,3 +861,5 @@ Now that we've hidden the entirety of our map, we need to start revealing the pa
  * [Albert Ford](https://www.albertford.com/shadowcasting/)
  * [Rogue Basin](https://www.roguebasin.com/index.php/FOV_using_recursive_shadowcasting)
  * [Rogue Basin Ruby Implementation](https://www.roguebasin.com/index.php/Ruby_shadowcasting_implementation)
+
+One interesting feature of the algorithm is that it works on 1/8 of a circle, and we simple call it 8 times with a set of translations for each octant.
