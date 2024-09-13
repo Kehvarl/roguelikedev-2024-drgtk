@@ -72,7 +72,7 @@ class GameMap
 
                 if blocked
                     # We've scanning a row of blocked squares
-                    if blocked?(mx, my)
+                    if vision_blocked?(mx, my)
                         new_start = r_slope
                         next
                     else
@@ -80,7 +80,7 @@ class GameMap
                         light_start = new_start
                     end
                 else
-                    if blocked?(mx, my) and j < radius
+                    if vision_blocked?(mx, my) and j < radius
                         # This is a blocking square, start a child scan
                         blocked = true
                         cast_light(cx, cy, j+1, light_start, l_slope,
@@ -99,8 +99,8 @@ class GameMap
     (0 <= x  and x <= @w) and (0 <= y and y < @h)
   end
 
-  def blocked?(x,y)
-    (not in_bounds(x,y)) or (not@tiles.key?([x,y])) or @tiles[[x,y]].blocks_movement
+  def vision_blocked?(x,y)
+    (not in_bounds(x,y)) or (not@tiles.key?([x,y])) or @tiles[[x,y]].blocks_vision
   end
 
   def light(x,y)

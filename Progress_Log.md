@@ -863,3 +863,84 @@ Now that we've hidden the entirety of our map, we need to start revealing the pa
  * [Rogue Basin Ruby Implementation](https://www.roguebasin.com/index.php/Ruby_shadowcasting_implementation)
 
 One interesting feature of the algorithm is that it works on 1/8 of a circle, and we simple call it 8 times with a set of translations for each octant.
+
+We can almost use the RogueBasin Ruby code as is.  First we need a couple of utility functions in our `GameMap`:
+ * blocked(x,y): checks the tile at the grid position X,Y.   If the tile doesn't exist, is off the map, or exists but blocks visibility, then we'll assume it's a blocking tile.
+ * light(x,y):  "lights" the tile at grid position X,Y.  Also marks it as Visited.
+
+```ruby
+  def vision_blocked?(x,y)
+    (not in_bounds(x,y)) or (not@tiles.key?([x,y])) or @tiles[[x,y]].blocks_vision
+  end
+
+  def light(x,y)
+    if in_bounds(x, y) and @tiles.key?([x, y])
+      @tiles[[x, y]].visited = true
+      @tiles[[x, y]].light
+    end
+  end
+```
+
+With those tools, we can essentially copy the rest of the code from the article:
+```ruby
+  # Determines which co-ordinates on a 2D grid are visible
+  # from a particular co-ordinate.
+  # start_x, start_y: center of view
+  # radius: how far field of view extends
+  def do_fov(start_x, start_y, radius=10)
+    light(start_x, start_y) # Light the starting position
+
+    8.times do |oct|
+        cast_light start_x, start_y, 1, 1.0, 0.0, radius,
+            @@mult[0][oct],@@mult[1][oct],
+            @@mult[2][oct], @@mult[3][oct], 0
+    end
+  end
+
+  def cast_light(cx, cy, row, light_start, light_end, radius, xx, xy, yx, yy, id)
+    return if light_start < light_end
+    radius_sq = radius * radius
+    (row..radius).each do |j| # .. is inclusive
+        dx, dy = -j - 1, -j
+        blocked = false
+        while dx <= 0
+            dx += 1
+            # Translate the dx, dy co-ordinates into map co-ordinates
+            mx, my = cx + dx * xx + dy * xy, cy + dx * yx + dy * yy
+            # l_slope and r_slope store the slopes of the left and right
+            # extremities of the square we're considering:
+            l_slope, r_slope = (dx-0.5)/(dy+0.5), (dx+0.5)/(dy-0.5)
+            if light_start < r_slope
+                next
+            elsif light_end > l_slope
+                break
+            else
+                # Our light beam is touching this square; light it
+                if (dx*dx + dy*dy) < radius_sq
+                  light(mx,my)
+                end
+
+                if blocked
+                    # We've scanning a row of blocked squares
+                    if vision_blocked?(mx, my)
+                        new_start = r_slope
+                        next
+                    else
+                        blocked = false
+                        light_start = new_start
+                    end
+                else
+                    if vision_blocked?(mx, my) and j < radius
+                        # This is a blocking square, start a child scan
+                        blocked = true
+                        cast_light(cx, cy, j+1, light_start, l_slope,
+                            radius, xx, xy, yx, yy, id+1)
+                        new_start = r_slope
+                    end
+                end
+            end
+        end # while dx <= 0
+        break if blocked
+    end # (row..radius+1).each
+  end
+```
