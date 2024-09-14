@@ -944,3 +944,12 @@ With those tools, we can essentially copy the rest of the code from the article:
     end # (row..radius+1).each
   end
 ```
+
+And that's it.   If we were using a library like TCOD it would be even simpler as the shadowcasting function would be built in.
+
+
+
+
+## Part 5 - Placing Enemies and Kicking them (Harmlessly)
+
+Next up, let's populate our dungeon and interact with the denizens thereof.
