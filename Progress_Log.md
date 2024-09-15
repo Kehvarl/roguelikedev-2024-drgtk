@@ -950,6 +950,44 @@ And that's it.   If we were using a library like TCOD it would be even simpler a
 
 
 
+
 ## Part 5 - Placing Enemies and Kicking them (Harmlessly)
 
 Next up, let's populate our dungeon and interact with the denizens thereof.
+
+When we're generating our dungeon is the perfect time to populate it.  If that's the case, then we should revisit our `Entities` class, and especially think about how we store it.   Right now it's part of `Engine`.  That makes sense since the `Engine` class is all about interactions, but for the sake of placing them when we generate dungeon levels, and especially for handling different dungeon levels and moving between them, it may make more sense to put the `Entity` objects in the `GameMap` itself.
+
+First up, let's add some Entity storage to `GameMap`
+```ruby
+def initialize(entities)
+  @w = 80
+  @h = 40
+  @tiles = {}
+  @visible = []
+  @entities =entities
+end
+```
+
+We also need to remove them from `Engine`
+```ruby
+class Engine
+  attr_accessor :player, :game_map
+  def initialize(player, game_map)
+    @player = player
+    @game_map = game_map
+  end
+```
+
+Since we've removed our entities collection from `Engine`, we need to change how we instantiate it over in `main`, though we'll be revisiting this again before we're ready for testing.
+```ruby
+def tick args
+  if args.tick_count == 0
+    player = Entity.new()
+    entities = [player, Entity.new({x:42, y:20, b:0})]
+    generator = DungeonMaker.new()
+    game_map = generator.generate_dungeon(args)
+    player.position(generator.player_x, generator.player_y)
+    args.state.engine = Engine.new(player, game_map)
+  end
+end
+```
