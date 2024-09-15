@@ -11,11 +11,12 @@ class GameMap
             [1,  0,  0,  1, -1,  0,  0, -1],
          ]
 
-  def initialize()
+  def initialize(entities)
     @w = 80
     @h = 40
     @tiles = {}
     @visible = []
+    @entities =entities
   end
 
   def calculate_fov(x, y)

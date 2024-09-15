@@ -11,8 +11,7 @@ def tick args
     generator = DungeonMaker.new()
     game_map = generator.generate_dungeon(args)
     player.position(generator.player_x, generator.player_y)
-    args.state.engine = Engine.new(entities, player, game_map)
-
+    args.state.engine = Engine.new(player, game_map)
   end
 
   events = []

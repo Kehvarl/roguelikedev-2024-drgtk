@@ -1,7 +1,6 @@
 class Engine
-  attr_accessor :entities, :player, :game_map
-  def initialize(entities, player, game_map)
-    @entities = entities
+  attr_accessor :player, :game_map
+  def initialize(player, game_map)
     @player = player
     @game_map = game_map
   end
