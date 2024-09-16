@@ -991,3 +991,24 @@ def tick args
   end
 end
 ```
+
+`Engine` no longer has access to the Entities list, meaning it can't render them for us.  Let's take that out and move it where it belongs:
+`Engine`
+```ruby
+def render
+end
+```
+
+`GameMap`
+```ruby
+def render()
+  out = []
+  @tiles.each_key do |t|
+    if @tiles[t].visited
+      out << @tiles[t]
+    end
+  end
+  out << @entities
+  out
+end
+```
