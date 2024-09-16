@@ -125,6 +125,7 @@ class GameMap
         out << @tiles[t]
       end
     end
+    out << @entities
     out
   end
 end

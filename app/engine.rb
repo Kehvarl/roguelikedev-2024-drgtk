@@ -18,6 +18,5 @@ class Engine
   end
 
   def render
-    @entities
   end
 end
