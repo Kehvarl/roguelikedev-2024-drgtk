@@ -28,8 +28,8 @@ end
 
 class DungeonMaker
   attr_accessor :player_x, :player_y
-  def initialize()
-    @dungeon = GameMap.new()
+  def initialize(player)
+    @dungeon = GameMap.new([player])
     #@engine = engine
     @max_rooms = 10
     @room_min_size = 4
