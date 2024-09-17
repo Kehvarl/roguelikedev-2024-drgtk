@@ -955,6 +955,7 @@ And that's it.   If we were using a library like TCOD it would be even simpler a
 
 Next up, let's populate our dungeon and interact with the denizens thereof.
 
+### Relocating our Entity List
 When we're generating our dungeon is the perfect time to populate it.  If that's the case, then we should revisit our `Entities` class, and especially think about how we store it.   Right now it's part of `Engine`.  That makes sense since the `Engine` class is all about interactions, but for the sake of placing them when we generate dungeon levels, and especially for handling different dungeon levels and moving between them, it may make more sense to put the `Entity` objects in the `GameMap` itself.
 
 First up, let's add some Entity storage to `GameMap`
@@ -1012,3 +1013,34 @@ def render()
   out
 end
 ```
+
+Our `GameMap` needs an entity list, and since we create that in proc_gen, we need to go pass something in there.
+```ruby
+
+class DungeonMaker
+  attr_accessor :player_x, :player_y
+  def initialize(player)
+    @dungeon = GameMap.new([player])
+    #@engine = engine
+    @max_rooms = 10
+    @room_min_size = 4
+    @room_max_size = 10
+    @player_x = 0
+    @player_y = 0
+  end
+```
+
+Since the Player is an Entity, it makes sense to store them here in the entities list.  Of course, now we need to tweak our main.rb once more to provide the Player object to us:
+
+```ruby
+def tick args
+  if args.tick_count == 0
+    player = Entity.new()
+    generator = DungeonMaker.new(player)
+    game_map = generator.generate_dungeon(args)
+    player.position(generator.player_x, generator.player_y)
+    args.state.engine = Engine.new(player, game_map)
+  end
+```
+
+### With Entities properly stashed in our map, we can look into populating that list.  While we're generating the map, we have convenient Room definitions for all our rooms.  We'll use those to decide where enemies start in our dungeon.  We can even make sure no room has too many enemies this way.
