@@ -3,6 +3,7 @@ class Engine
   def initialize(player, game_map)
     @player = player
     @game_map = game_map
+    @game_map.do_fov(@player.pos_x, @player.pos_y)
   end
 
   def handle_events(events)

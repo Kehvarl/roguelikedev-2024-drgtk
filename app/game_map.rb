@@ -39,6 +39,7 @@ class GameMap
   # start_x, start_y: center of view
   # radius: how far field of view extends
   def do_fov(start_x, start_y, radius=10)
+    visible = []
     light(start_x, start_y)
 
     8.times do |oct|
@@ -105,6 +106,7 @@ class GameMap
   end
 
   def light(x,y)
+    @visible << [x,y]
     if in_bounds(x, y) and @tiles.key?([x, y])
       @tiles[[x, y]].visited = true
       @tiles[[x, y]].light
@@ -125,7 +127,11 @@ class GameMap
         out << @tiles[t]
       end
     end
-    out << @entities
+    @entities.each do |e|
+      if @visible.include?([e.pos_x, e.pos_y])
+        out << @entities
+      end
+    end
     out
   end
 end

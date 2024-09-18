@@ -1014,6 +1014,25 @@ def render()
 end
 ```
 
+Unfortunately, this render change means we can see all the entities anywhere on the map.   We should only render those in the field of View
+
+```ruby
+def render()
+  out = []
+  @tiles.each_key do |t|
+    if @tiles[t].visited
+      out << @tiles[t]
+    end
+  end
+  @entities.each do |e|
+    if @visible.include?([e.pos_x, e.pos_y])
+      out << @entities
+    end
+  end
+  out
+end
+```
+
 Our `GameMap` needs an entity list, and since we create that in proc_gen, we need to go pass something in there.
 ```ruby
 
@@ -1043,4 +1062,5 @@ def tick args
   end
 ```
 
-### With Entities properly stashed in our map, we can look into populating that list.  While we're generating the map, we have convenient Room definitions for all our rooms.  We'll use those to decide where enemies start in our dungeon.  We can even make sure no room has too many enemies this way.
+### Entity Creation
+With Entities properly stashed in our map, we can look into populating that list.  While we're generating the map, we have convenient Room definitions for all our rooms.  We'll use those to decide where enemies start in our dungeon.  We can even make sure no room has too many enemies this way.
