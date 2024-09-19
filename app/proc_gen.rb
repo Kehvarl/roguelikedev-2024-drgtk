@@ -34,6 +34,7 @@ class DungeonMaker
     @max_rooms = 10
     @room_min_size = 4
     @room_max_size = 10
+    @max_monsters_per_room = 2
     @player_x = 0
     @player_y = 0
   end
@@ -63,6 +64,11 @@ class DungeonMaker
     @player_y = rooms[0].center_y
 
     return @dungeon
+  end
+
+  def populate(room)
+
+
   end
 
   def carve(room)

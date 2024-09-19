@@ -1064,3 +1064,17 @@ def tick args
 
 ### Entity Creation
 With Entities properly stashed in our map, we can look into populating that list.  While we're generating the map, we have convenient Room definitions for all our rooms.  We'll use those to decide where enemies start in our dungeon.  We can even make sure no room has too many enemies this way.
+
+In our generator setup, let's add a limit for the number of monsters in a room:
+```ruby
+class DungeonMaker
+  attr_accessor :player_x, :player_y
+  def initialize(player)
+    @dungeon = GameMap.new([player])
+    #@engine = engine
+    @max_rooms = 10
+    @room_min_size = 4
+    @room_max_size = 10
+    @max_monsters_per_room = 2
+# ...
+```
