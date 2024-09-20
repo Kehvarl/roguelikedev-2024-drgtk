@@ -30,7 +30,6 @@ class DungeonMaker
   attr_accessor :player_x, :player_y
   def initialize(player)
     @dungeon = GameMap.new([player])
-    #@engine = engine
     @max_rooms = 10
     @room_min_size = 4
     @room_max_size = 10
@@ -67,7 +66,18 @@ class DungeonMaker
   end
 
   def populate(room)
-
+    monsters = rand(@max_monsters_per_room)
+    monsters.each do
+      x = (room.x1+1..room.x2).to_a.sample
+      y = (room.y1+1..room.y2).to_a.sample
+      if @entities.select(|e| e.x == x and e.y == y).length ==0
+        if(0...10).to_a.sample <= 8
+          # orc
+        else
+          # troll
+        end 
+      end
+    end
 
   end
 
