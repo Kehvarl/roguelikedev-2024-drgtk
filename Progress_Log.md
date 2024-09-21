@@ -1078,3 +1078,24 @@ class DungeonMaker
     @max_monsters_per_room = 2
 # ...
 ```
+
+We also need a function to populate monsters into a room.   While we're generating the rooms, we have a convenient `RectRoom` object that gives us the dimensions of a room. A function that takes that room, and puts monsters in random places in the room might look like the below.
+
+```ruby
+def populate(room)
+  monsters = rand(@max_monsters_per_room)
+  monsters.each do
+    x = (room.x1+1..room.x2).to_a.sample
+    y = (room.y1+1..room.y2).to_a.sample
+    if @entities.select(|e| e.x == x and e.y == y).length ==0
+      if rand(10) <= 8
+        # orc
+      else
+        # troll
+      end
+    end
+  end
+end
+```
+
+As you can see we aren't placing enemies yet, we need some extra features first, like monsters to put into the map...
