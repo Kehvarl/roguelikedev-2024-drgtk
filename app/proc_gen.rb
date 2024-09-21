@@ -75,10 +75,9 @@ class DungeonMaker
           # orc
         else
           # troll
-        end 
+        end
       end
     end
-
   end
 
   def carve(room)
