@@ -17,6 +17,7 @@ class Entity
     @r = vals.r || 255
     @g = vals.g || 255
     @b = vals.b || 255
+    @blocks_movement = true
   end
 
   def position(x, y)
