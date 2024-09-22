@@ -1099,3 +1099,7 @@ end
 ```
 
 As you can see we aren't placing enemies yet, we need some extra features first, like monsters to put into the map...
+
+@ =   0,64
+T =  64,80
+O = 240,64

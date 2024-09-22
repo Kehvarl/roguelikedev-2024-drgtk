@@ -50,11 +50,12 @@ class DungeonMaker
 
       collisions = args.geometry.find_all_intersect_rect(new_room, rooms)
       if collisions.size == 0
-        puts("#{new_room.center_x}, #{new_room.center_y}")
+        #puts("#{new_room.center_x}, #{new_room.center_y}")
         rooms << new_room
         carve(new_room)
         if rooms.size > 1
           tunnel_between(rooms[-2], new_room)
+          populate(new_room)
         end
       end
     end
@@ -70,11 +71,17 @@ class DungeonMaker
     monsters.each do
       x = (room.x1+1..room.x2).to_a.sample
       y = (room.y1+1..room.y2).to_a.sample
-      if @entities.select(|e| e.x == x and e.y == y).length ==0
+      if @dungeon.entities.select{|e| e.x == x and e.y == y}.length ==0
         if(0...10).to_a.sample <= 8
-          # orc
+          # orc, O = 240,64
+          orc = Entity.new({char_c:240, char_r:64})
+          orc.position(x,y)
+          @dungeon.entities << orc
         else
-          # troll
+          # troll, T =  64,80
+          troll = Entity.new({char_c:64, char_r:80})
+          troll.position(x,y)
+          @dungeon.entities << troll
         end
       end
     end

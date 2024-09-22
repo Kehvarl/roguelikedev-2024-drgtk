@@ -1,7 +1,7 @@
 require('app/tile.rb')
 
 class GameMap
-  attr_accessor :tiles, :w, :h
+  attr_accessor :tiles, :w, :h, :entities
 
   # Multipliers for transforming coordinates into other octants
   @@mult = [
@@ -106,8 +106,8 @@ class GameMap
   end
 
   def light(x,y)
-    @visible << [x,y]
     if in_bounds(x, y) and @tiles.key?([x, y])
+      @visible << [x,y]
       @tiles[[x, y]].visited = true
       @tiles[[x, y]].light
     end
@@ -129,7 +129,7 @@ class GameMap
     end
     @entities.each do |e|
       if @visible.include?([e.pos_x, e.pos_y])
-        out << @entities
+        out << e
       end
     end
     out
