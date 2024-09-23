@@ -1,8 +1,9 @@
 class Entity
   attr_sprite
-  attr_accessor :pos_x, :pos_y
+  attr_accessor :pos_x, :pos_y, :name
 
   def initialize (vals={})
+    @name = vals.name || "Entity"
     @pos_x = vals.x || 0
     @pos_y = vals.y || 0
     @x = @pos_x * 16
