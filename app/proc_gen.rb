@@ -74,12 +74,12 @@ class DungeonMaker
       if @dungeon.entities.select{|e| e.x == x and e.y == y}.length ==0
         if(0...10).to_a.sample <= 8
           # orc, O = 240,64
-          orc = Entity.new({char_c:240, char_r:64})
+          orc = Entity.new({char_c:240, char_r:64, name:"Orc"})
           orc.position(x,y)
           @dungeon.entities << orc
         else
           # troll, T =  64,80
-          troll = Entity.new({char_c:64, char_r:80})
+          troll = Entity.new({char_c:64, char_r:80, name:"Troll"})
           troll.position(x,y)
           @dungeon.entities << troll
         end
