@@ -16,6 +16,7 @@ class Engine
               @player.move(event.dx, event.dy)
             else
               puts ("Destination is blocked by Entity: #{e[0].name}")
+              # melee action
             end
             @game_map.do_fov(@player.pos_x, @player.pos_y, 10)
           end
