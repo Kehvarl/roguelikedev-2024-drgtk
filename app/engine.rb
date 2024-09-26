@@ -11,18 +11,18 @@ class Engine
         if event.type == :player_move
           r = @player.get_potential_move(event.dx, event.dy)
           if @game_map.valid_move(r[0], r[1])
-            e = @game_map.get_blocking_entities_at(r[0], r[1])
+            e = @game_map.get_blocking_entity_at(r[0], r[1])
             if e == []
               @player.move(event.dx, event.dy)
             else
-              events << {type: :attack, x: e[0].pos_x, y: e[0].pos_y}
+              events << {type: :attack, x: e.pos_x, y: e.pos_y}
               # melee action
             end
             @game_map.do_fov(@player.pos_x, @player.pos_y, 10)
           end
         elsif event.type == :attack
-          e = @game_map.get_blocking_entities_at(event.x, event.y)
-          puts ("Destination is blocked by Entity: #{e[0].name}")
+          e = @game_map.get_blocking_entity_at(event.x, event.y)
+          puts ("Destination is blocked by Entity: #{e.name}")
         end
       end
   end
