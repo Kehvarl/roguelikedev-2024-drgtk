@@ -113,8 +113,13 @@ class GameMap
     end
   end
 
-  def get_blocking_entities_at(x,y)
-    @entities.select{|e| e.pos_x == x and e.pos_y == y}
+  def get_blocking_entity_at(x,y)
+    out = @entities.select{|e| e.pos_x == x and e.pos_y == y}
+    if out != []
+      out[0]
+    else
+      []
+    end
   end
 
 
