@@ -1103,3 +1103,10 @@ As you can see we aren't placing enemies yet, we need some extra features first,
 @ =   0,64
 T =  64,80
 O = 240,64
+
+
+=== We'll need to finish documenting part 5
+
+## Part 6: Doing - and Taking - Some Damage
+
+### Refactoring
