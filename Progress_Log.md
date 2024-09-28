@@ -1110,3 +1110,4 @@ O = 240,64
 ## Part 6: Doing - and Taking - Some Damage
 
 ### Refactoring
+We've done a lot of work, before we move on we should clean up the project and make sure we can reason about improvements
