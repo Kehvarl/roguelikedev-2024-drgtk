@@ -1111,3 +1111,10 @@ O = 240,64
 
 ### Refactoring
 We've done a lot of work, before we move on we should clean up the project and make sure we can reason about improvements
+
+Questions to consider
+* Where do we handle Events
+* Is Game Map in Engine, or does GameMap have a reference to Engine inside it
+* How do Entites interact with the map and engine?
+  * Does an entity actually do anything, or is it all handled by the Engine?
+* How do we reason about actions.   How does an action refer to the entity performing it?
