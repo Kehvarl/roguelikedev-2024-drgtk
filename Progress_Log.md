@@ -415,7 +415,7 @@ require('app/engine.rb')
 def tick args
   if args.tick_count == 0
     player = Entity.new({x:40,y:20,char_r:0,char_c:0})
-    entities = [player, Entity.new({x:42,y:20,char_r:0,char_c:0,r=255,g=255,b=0)]
+    entities = [player, Entity.new({x:42,y:20,char_r:0,char_c:0,r=255,g=255,b=0})]
     args.state.engine = Engine.new(entities, player)
   end
 
