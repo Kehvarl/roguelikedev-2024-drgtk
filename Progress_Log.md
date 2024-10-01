@@ -1114,7 +1114,13 @@ We've done a lot of work, before we move on we should clean up the project and m
 
 Questions to consider
 * Where do we handle Events
+  * The engine currently handles them
+  * Doe we move that to an action item or make engine more complicated?
 * Is Game Map in Engine, or does GameMap have a reference to Engine inside it
+  * Main has Engine
+  * Main creates Game Maps and passes a reference to Engine to them
 * How do Entites interact with the map and engine?
   * Does an entity actually do anything, or is it all handled by the Engine?
 * How do we reason about actions.   How does an action refer to the entity performing it?
+
+
